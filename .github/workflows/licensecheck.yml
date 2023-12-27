@@ -1,4 +1,4 @@
-name: GameCI. Build and Deploy
+name: License Check
 
 on:
   workflow_dispatch:
