@@ -30,7 +30,7 @@ jobs:
           key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
 
       - name: Git LFS Pull
-        run:
+        run: |
           git lfs pull
           git add .
           git reset --hard
@@ -40,7 +40,7 @@ jobs:
         with:
           path: Library
           key: Library-build-WebGL
-          restore-keys:
+          restore-keys: |
             Library-build-
             Library-
 
@@ -70,5 +70,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.5.0
         with:
-          branch: gh-pages
+          branch: ghPage
           folder: build/WebGL
