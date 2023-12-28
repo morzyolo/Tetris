@@ -6,7 +6,7 @@ namespace TetrominoGridHandlers
 {
 	public class TetrominoFactory
 	{
-		private readonly Random _random;
+		private readonly Unity.Mathematics.Random _random = new();
 
 		private readonly bool[] _isCreatedTetrominoes;
 		private readonly Func<ITetromino>[] _tetrominoesFuncs =
@@ -20,15 +20,17 @@ namespace TetrominoGridHandlers
 			() => new TetrominoZ(),
 		};
 
-		public TetrominoFactory(int seed)
+		public TetrominoFactory()
 		{
-			_random = new(seed);
 			_isCreatedTetrominoes = new bool[_tetrominoesFuncs.Length];
 		}
 
+		public void ChangeSeed(uint seed)
+			=> _random.InitState(seed);
+
 		public ITetromino Produce()
 		{
-			int tetrominoId = _random.Next(_tetrominoesFuncs.Length);
+			int tetrominoId = _random.NextInt(_tetrominoesFuncs.Length);
 
 			if (_isCreatedTetrominoes[tetrominoId])
 			{
