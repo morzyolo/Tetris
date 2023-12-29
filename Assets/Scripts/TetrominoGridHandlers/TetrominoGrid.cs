@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace TetrominoGridHandlers
 {
 	public class TetrominoGrid : MonoBehaviour
 	{
+		[SerializeField] private Tilemap _tilemap;
 		[SerializeField] private GridSetup _gridSetup;
 
 		[Header("Grid stats")]
