@@ -18,5 +18,8 @@ namespace Tetrominoes
 
 		public override Tetromino CloneWithTile(Tile tile)
 			=> new TetrominoI(tile);
+
+		public override Tetromino Clone()
+			=> new TetrominoI(_tile);
 	}
 }

@@ -3,6 +3,7 @@ using UnityEngine.Tilemaps;
 
 namespace Tetrominoes
 {
+	[System.Serializable]
 	public abstract class Tetromino
 	{
 		public string Name => _name;
@@ -20,6 +21,8 @@ namespace Tetrominoes
 			_cells = cells;
 			_tile = tile;
 		}
+
+		public abstract Tetromino Clone();
 
 		public abstract Tetromino CloneWithTile(Tile tile);
 	}
