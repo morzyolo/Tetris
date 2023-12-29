@@ -9,7 +9,7 @@ namespace TetrominoGridHandlers
 		private readonly Unity.Mathematics.Random _random = new();
 
 		private readonly bool[] _isCreatedTetrominoes;
-		private readonly Func<ITetromino>[] _tetrominoesFuncs =
+		private readonly Func<Tetromino>[] _tetrominoesFuncs =
 		{
 			() => new TetrominoI(),
 			() => new TetrominoJ(),
@@ -28,7 +28,7 @@ namespace TetrominoGridHandlers
 		public void ChangeSeed(uint seed)
 			=> _random.InitState(seed);
 
-		public ITetromino Produce()
+		public Tetromino Produce()
 		{
 			int tetrominoId = _random.NextInt(_tetrominoesFuncs.Length);
 

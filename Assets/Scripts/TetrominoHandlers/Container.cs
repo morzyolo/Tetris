@@ -4,13 +4,13 @@ namespace TetrominoHandlers
 {
 	public class Container
 	{
-		public ITetromino CurrentTetromino => _currentTetramino;
-		private ITetromino _currentTetramino;
+		public Tetromino CurrentTetromino => _currentTetramino;
+		private Tetromino _currentTetramino;
 
-		public Container(ITetromino startTetromino)
+		public Container(Tetromino startTetromino)
 			=> SwitchTetromino(startTetromino);
 
-		public void SwitchTetromino(ITetromino newTetromino)
+		public void SwitchTetromino(Tetromino newTetromino)
 			=> _currentTetramino = newTetromino;
 	}
 }

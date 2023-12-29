@@ -1,10 +1,22 @@
 ﻿using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Tetrominoes
 {
-	public class TetrominoO : ITetromino
+	public class TetrominoO : Tetromino
 	{
-		public Vector2Int[] Cells => _cells;
-		private readonly Vector2Int[] _cells = { new(0, 1), new(1, 1), new(0, 0), new(1, 0) };
+		public TetrominoO()
+			: this(null)
+		{ }
+
+		public TetrominoO(Tile tile)
+			: base(
+				nameof(TetrominoO),
+				tile,
+				new Vector2Int[] { new(0, 1), new(1, 1), new(0, 0), new(1, 0) })
+		{ }
+
+		public override Tetromino CloneWithTile(Tile tile)
+			=> new TetrominoO(tile);
 	}
 }
