@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Configs;
+using System;
 using System.Linq;
 using Tetrominoes;
 
@@ -6,23 +7,15 @@ namespace TetrominoGridHandlers
 {
 	public class TetrominoFactory
 	{
+		private readonly TetrominoConfig _config;
 		private readonly Unity.Mathematics.Random _random = new();
 
 		private readonly bool[] _isCreatedTetrominoes;
-		private readonly Func<Tetromino>[] _tetrominoesFuncs =
-		{
-			() => new TetrominoI(),
-			() => new TetrominoJ(),
-			() => new TetrominoL(),
-			() => new TetrominoO(),
-			() => new TetrominoS(),
-			() => new TetrominoT(),
-			() => new TetrominoZ(),
-		};
 
-		public TetrominoFactory()
+		public TetrominoFactory(TetrominoConfig config)
 		{
-			_isCreatedTetrominoes = new bool[_tetrominoesFuncs.Length];
+			_config = config;
+			_isCreatedTetrominoes = new bool[_config.Tetrominos.Count];
 		}
 
 		public void ChangeSeed(uint seed)
@@ -30,7 +23,7 @@ namespace TetrominoGridHandlers
 
 		public Tetromino Produce()
 		{
-			int tetrominoId = _random.NextInt(_tetrominoesFuncs.Length);
+			int tetrominoId = _random.NextInt(_config.Tetrominos.Count);
 
 			if (_isCreatedTetrominoes[tetrominoId])
 			{
@@ -43,7 +36,7 @@ namespace TetrominoGridHandlers
 			}
 
 			_isCreatedTetrominoes[tetrominoId] = true;
-			return _tetrominoesFuncs[tetrominoId]();
+			return _config.Tetrominos[tetrominoId].GetTetromino();
 		}
 
 		private int GetIndexFromRemaining(int remainingTetraminoCount)
