@@ -1,4 +1,4 @@
-using Configs;
+using DataHandlers;
 using InputHandlers;
 using TetrominoGridHandlers;
 using TetrominoHandlers;
@@ -8,8 +8,6 @@ namespace Core
 {
 	public class Bootstrap : MonoBehaviour
 	{
-		[SerializeField] private TetrominoConfig _config;
-
 		[SerializeField] private TetrominoGrid _grid;
 		[SerializeField] private InputHandler _input;
 
@@ -17,7 +15,9 @@ namespace Core
 
 		private void Awake()
 		{
-			TetrominoFactory tetrominoFactory = new(_config);
+			TileLoader tileLoader = new();
+			TetrominoRepository tetrominoRepository = new(tileLoader.LoadTiles());
+			TetrominoFactory tetrominoFactory = new(tetrominoRepository);
 			Container container = new(tetrominoFactory.Produce());
 			HorizontalMover horizontalMover = new(_grid, container);
 			Rotator rotator = new(_grid, container);
