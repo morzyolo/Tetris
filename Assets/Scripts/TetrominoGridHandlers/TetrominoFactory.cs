@@ -8,7 +8,6 @@ namespace TetrominoGridHandlers
 	public class TetrominoFactory
 	{
 		private readonly TetrominoConfig _config;
-		private readonly Unity.Mathematics.Random _random = new();
 
 		private readonly bool[] _isCreatedTetrominoes;
 
@@ -18,12 +17,12 @@ namespace TetrominoGridHandlers
 			_isCreatedTetrominoes = new bool[_config.Tetrominos.Count];
 		}
 
-		public void ChangeSeed(uint seed)
-			=> _random.InitState(seed);
+		public void ChangeSeed(int seed)
+			=> UnityEngine.Random.InitState(seed);
 
 		public Tetromino Produce()
 		{
-			int tetrominoId = _random.NextInt(_config.Tetrominos.Count);
+			int tetrominoId = UnityEngine.Random.Range(0, _config.Tetrominos.Count);
 
 			if (_isCreatedTetrominoes[tetrominoId])
 			{
