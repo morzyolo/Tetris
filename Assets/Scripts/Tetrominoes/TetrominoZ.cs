@@ -21,5 +21,15 @@ namespace Tetrominoes
 
 		public override Tetromino Clone()
 			=> new TetrominoZ(_tile);
+
+		public override void Rotate(float direction)
+		{
+			int multiplier = direction > 0 ? 1 : -1;
+
+			for (int i = 0; i < _cells.Length; i++)
+				_cells[i].Set(
+					Mathf.RoundToInt(GetRotationByRow(_cells[i], multiplier, 0)),
+					Mathf.RoundToInt(GetRotationByRow(_cells[i], multiplier, 1)));
+		}
 	}
 }
