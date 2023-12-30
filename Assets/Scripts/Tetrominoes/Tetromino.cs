@@ -6,6 +6,8 @@ namespace Tetrominoes
 	[System.Serializable]
 	public abstract class Tetromino
 	{
+		public Vector2Int Position { get; set; }
+
 		public string Name => _name;
 		protected readonly string _name;
 
@@ -15,7 +17,7 @@ namespace Tetrominoes
 		public Vector2Int[] Cells => _cells;
 		protected readonly Vector2Int[] _cells;
 
-		protected Tetromino(string name, Tile tile, Vector2Int[] cells) 
+		protected Tetromino(string name, Tile tile, Vector2Int[] cells)
 		{
 			_name = name;
 			_cells = cells;

@@ -21,6 +21,7 @@ namespace TetrominoGridHandlers
 
 		public void SpawnTetromino(Tetromino tetromino)
 		{
+			tetromino.Position = _spawnPosition;
 			for (int i = 0; i < tetromino.Cells.Length; i++)
 				_tilemap.SetTile(
 					(Vector3Int)(tetromino.Cells[i] + _spawnPosition),
