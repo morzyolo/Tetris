@@ -11,7 +11,7 @@ namespace TetrominoGridHandlers
 
 		[Header("Grid stats")]
 		[SerializeField] private Vector2Int _gridSize = new(10, 18);
-		[SerializeField] private Vector2Int _spawnPosition = new(5, 16);
+		[SerializeField] private Vector2Int _spawnPosition = new(4, 16);
 
 		private void Awake()
 		{
@@ -22,6 +22,20 @@ namespace TetrominoGridHandlers
 		{
 			tetromino.Position = _spawnPosition;
 			PlaceTetrominoTiles(tetromino, tetromino.Data.Tile);
+		}
+
+		public bool TryMoveTetromino(Tetromino tetromino, Vector2Int translation)
+		{
+			Vector2Int newPosition = tetromino.Position;
+			newPosition.x += translation.x;
+			newPosition.y += translation.y;
+
+			bool isValid = IsValidTetrominoPosition(newPosition, tetromino);
+
+			if (isValid)
+				tetromino.Position = newPosition;
+
+			return isValid;
 		}
 
 		public bool IsValidTetrominoPosition(Vector2Int position, Tetromino tetromino)
