@@ -5,12 +5,18 @@ namespace TetrominoHandlers
 {
 	public class Switcher : IDisposable
 	{
+		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
 		private readonly DownMover _downMover;
 		private readonly TetrominoFactory _factory;
 
-		public Switcher(Container container, TetrominoFactory factory, DownMover downMover)
+		public Switcher(
+			TetrominoGrid grid,
+			Container container,
+			DownMover downMover,
+			TetrominoFactory factory)
 		{
+			_grid = grid;
 			_container = container;
 			_downMover = downMover;
 			_factory = factory;
@@ -19,7 +25,11 @@ namespace TetrominoHandlers
 		}
 
 		private void SwitchTetromino()
-			=> _container.SwitchTetromino(_factory.Produce());
+		{
+			var tetromino = _factory.Produce();
+			_container.SwitchTetromino(tetromino);
+			_grid.SpawnTetromino(tetromino);
+		}
 
 		public void Dispose()
 		{
