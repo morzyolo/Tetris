@@ -9,17 +9,8 @@ namespace Tetrominoes
 	{
 		public Vector2Int Position { get; set; }
 
-		private const int _rotationCount = 4;
-
-		public int RotationIndex
-		{
-			get => _rotationIndex;
-			private set => _rotationIndex = (value + _rotationCount) % _rotationCount;
-		}
-		protected int _rotationIndex = 0;
-
 		private readonly RotationMatrix _rotationMatrix = new();
-		
+
 		public string Name => _name;
 		protected readonly string _name;
 
