@@ -26,7 +26,7 @@ namespace Core
 			_input.Init(control);
 
 			DownMover downMover = new(_grid, container);
-			_switcher = new(tetrominoFactory, downMover);
+			_switcher = new(container, tetrominoFactory, downMover);
 		}
 
 		private void OnDisable()
