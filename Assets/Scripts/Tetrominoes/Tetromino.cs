@@ -20,7 +20,7 @@ namespace Tetrominoes
 		public abstract Tetromino Clone();
 		public abstract Tetromino CloneWithTile(Tile tile);
 
-		protected float GetRotationByRow(Vector2Int cell, int multiplier, int row)
+		protected float GetRotationByRow(Vector2 cell, int multiplier, int row)
 			=> cell.x * multiplier * _data.Matrix[row, 0]
 				+ cell.y * multiplier * _data.Matrix[row, 1];
 	}

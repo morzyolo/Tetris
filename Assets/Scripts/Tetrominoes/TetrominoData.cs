@@ -11,7 +11,9 @@ namespace Tetrominoes
 		public int RotationIndex
 		{
 			get => _rotationIndex;
-			set => _rotationIndex = (value + _rotationCount) % _rotationCount;
+			set => _rotationIndex = value < 0 ?
+				_rotationCount - (-value) % _rotationCount
+				: value % _rotationCount;
 		}
 		private int _rotationIndex = 0;
 

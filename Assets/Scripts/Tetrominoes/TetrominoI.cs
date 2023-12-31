@@ -32,12 +32,11 @@ namespace Tetrominoes
 			for (int i = 0; i < Data.Cells.Length; i++)
 			{
 				Vector2 cell = Data.Cells[i];
-
 				cell.x -= 0.5f;
 				cell.y -= 0.5f;
 				Data.Cells[i].Set(
-					Mathf.CeilToInt(GetRotationByRow(Data.Cells[i], multiplier, 0)),
-					Mathf.CeilToInt(GetRotationByRow(Data.Cells[i], multiplier, 1)));
+					Mathf.CeilToInt(GetRotationByRow(cell, multiplier, 0)),
+					Mathf.CeilToInt(GetRotationByRow(cell, multiplier, 1)));
 			}
 		}
 	}

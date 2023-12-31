@@ -26,19 +26,6 @@ namespace Tetrominoes
 			=> new TetrominoO(Data.Tile, Data.WallKicks);
 
 		public override void Rotate(float direction)
-		{
-			int multiplier = direction > 0 ? 1 : -1;
-
-			for (int i = 0; i < Data.Cells.Length; i++)
-			{
-				Vector2 cell = Data.Cells[i];
-
-				cell.x -= 0.5f;
-				cell.y -= 0.5f;
-				Data.Cells[i].Set(
-					Mathf.CeilToInt(GetRotationByRow(Data.Cells[i], multiplier, 0)),
-					Mathf.CeilToInt(GetRotationByRow(Data.Cells[i], multiplier, 1)));
-			}
-		}
+		{ }
 	}
 }
