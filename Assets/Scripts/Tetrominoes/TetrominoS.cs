@@ -15,7 +15,7 @@ namespace Tetrominoes
 				new(
 					nameof(TetrominoS),
 					tile,
-					new Vector2Int[] { new(-1, 1), new(0, 1), new(1, 1), new(2, 1) },
+					new Vector2Int[] { new(0, 1), new(1, 1), new(-1, 0), new(0, 0) },
 					wallKicks))
 		{ }
 
