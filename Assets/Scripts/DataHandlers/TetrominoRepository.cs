@@ -32,11 +32,11 @@ namespace DataHandlers
 
 			foreach (var tetromino in defaultTetrominoes)
 			{
-				var tile = Array.Find(tiles, t => t.name == tetromino.Name);
+				var tile = Array.Find(tiles, t => t.name == tetromino.Data.Name);
 
 				if (tile == null)
 				{
-					Debug.LogError($"Tile {tetromino.Name} not found");
+					Debug.LogError($"Tile {tetromino.Data.Name} not found");
 					tile = tiles[0];
 				}
 

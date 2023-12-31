@@ -21,14 +21,16 @@ namespace TetrominoGridHandlers
 		public void SpawnTetromino(Tetromino tetromino)
 		{
 			tetromino.Position = _spawnPosition;
-			PlaceTetrominoTiles(tetromino, tetromino.Tile);
+			PlaceTetrominoTiles(tetromino, tetromino.Data.Tile);
 		}
 
 		public bool IsValidTetrominoPosition(Vector2Int position, Tetromino tetromino)
 		{
-			for (int i = 0; i < tetromino.Cells.Length; i++)
+			Vector2Int[] cells = tetromino.Data.Cells;
+
+			for (int i = 0; i < cells.Length; i++)
 			{
-				var tilePosition = tetromino.Cells[i] + position;
+				var tilePosition = cells[i] + position;
 
 				if (!IsContainsPosition(tilePosition))
 					return false;
@@ -44,13 +46,15 @@ namespace TetrominoGridHandlers
 			=> PlaceTetrominoTiles(tetromino, null);
 
 		public void PlaceTetromino(Tetromino tetromino)
-			=> PlaceTetrominoTiles(tetromino, tetromino.Tile);
+			=> PlaceTetrominoTiles(tetromino, tetromino.Data.Tile);
 
 		private void PlaceTetrominoTiles(Tetromino tetromino, Tile tile)
 		{
-			for (int i = 0; i < tetromino.Cells.Length; i++)
+			Vector2Int[] cells = tetromino.Data.Cells;
+
+			for (int i = 0; i < cells.Length; i++)
 				_tilemap.SetTile(
-					(Vector3Int)(tetromino.Cells[i] + tetromino.Position),
+					(Vector3Int)(cells[i] + tetromino.Position),
 					tile);
 		}
 

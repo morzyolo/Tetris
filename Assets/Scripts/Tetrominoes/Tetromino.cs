@@ -1,5 +1,4 @@
-﻿using Transformations;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace Tetrominoes
@@ -9,26 +8,12 @@ namespace Tetrominoes
 	{
 		public Vector2Int Position { get; set; }
 
-		private readonly RotationMatrix _rotationMatrix = new();
+		public TetrominoData Data => _data;
+		private readonly TetrominoData _data;
 
-		public string Name => _name;
-		protected readonly string _name;
-
-		public Tile Tile => _tile;
-		protected readonly Tile _tile;
-
-		public Vector2Int[] Cells => _cells;
-		protected readonly Vector2Int[] _cells;
-
-		public Vector2Int[,] WallKicks => _wallKicks;
-		protected readonly Vector2Int[,] _wallKicks;
-
-		protected Tetromino(string name, Tile tile, Vector2Int[] cells, Vector2Int[,] wallKicks)
+		protected Tetromino(TetrominoData data)
 		{
-			_name = name;
-			_cells = cells;
-			_tile = tile;
-			_wallKicks = wallKicks;
+			_data = data;
 		}
 
 		public abstract void Rotate(float direction);
@@ -36,7 +21,7 @@ namespace Tetrominoes
 		public abstract Tetromino CloneWithTile(Tile tile);
 
 		protected float GetRotationByRow(Vector2Int cell, int multiplier, int row)
-			=> cell.x * multiplier * _rotationMatrix[row, 0]
-				+ cell.y * multiplier * _rotationMatrix[row, 1];
+			=> cell.x * multiplier * _data.Matrix[row, 0]
+				+ cell.y * multiplier * _data.Matrix[row, 1];
 	}
 }
