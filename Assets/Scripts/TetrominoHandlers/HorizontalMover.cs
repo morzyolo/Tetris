@@ -17,16 +17,8 @@ namespace TetrominoHandlers
 		public void Move(float direction)
 		{
 			_grid.ClearTetrominoTiles(_container.CurrentTetromino);
-
-			Vector2Int newPosition = _container.CurrentTetromino.Position;
-			if (direction > 0)
-				newPosition.x++;
-			else
-				newPosition.x--;
-
-			if (_grid.IsValidTetrominoPosition(newPosition, _container.CurrentTetromino))
-				_container.CurrentTetromino.Position = newPosition;
-
+			Vector2Int translation = direction < 0 ? Vector2Int.left : Vector2Int.right;
+			_grid.TryMoveTetromino(_container.CurrentTetromino, translation);
 			_grid.PlaceTetromino(_container.CurrentTetromino);
 		}
 	}
