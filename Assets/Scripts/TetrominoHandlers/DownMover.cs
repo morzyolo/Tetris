@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using TetrominoGridHandlers;
+using UnityEngine;
 
 namespace TetrominoHandlers
 {
@@ -8,14 +10,48 @@ namespace TetrominoHandlers
 		public event Action TetrominoPlaced;
 
 		private readonly TetrominoGrid _grid;
-		private readonly Container _tetromino;
+		private readonly Container _container;
 
-		public DownMover(TetrominoGrid grid, Container tetromino)
+		private readonly float _moveDelay = 0.35f;
+
+		public DownMover(TetrominoGrid grid, Container container)
 		{
 			_grid = grid;
-			_tetromino = tetromino;
+			_container = container;
 		}
 
-		// TODO: Moving down
+		public async UniTaskVoid Move()
+		{
+			float timeRemaining = _moveDelay;
+
+			while (true)
+			{
+				await UniTask.Yield();
+
+				bool isPlaced = false;
+				while (!isPlaced)
+				{
+					await UniTask.Yield(PlayerLoopTiming.Update);
+					timeRemaining -= Time.deltaTime;
+
+					if (timeRemaining < 0)
+					{
+						timeRemaining += _moveDelay;
+
+						_grid.ClearTetrominoTiles(_container.CurrentTetromino);
+
+						isPlaced = _grid.TryMoveTetromino(_container.CurrentTetromino, Vector2Int.down);
+
+						_grid.PlaceTetromino(_container.CurrentTetromino);
+
+						if (!isPlaced)
+						{
+							_grid.ClearRows();
+							TetrominoPlaced?.Invoke();
+						}
+					}
+				}
+			}
+		}
 	}
 }
