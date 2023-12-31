@@ -2,6 +2,7 @@ using DataHandlers;
 using InputHandlers;
 using TetrominoGridHandlers;
 using TetrominoHandlers;
+using Transformations;
 using UnityEngine;
 
 namespace Core
@@ -16,7 +17,7 @@ namespace Core
 		private void Awake()
 		{
 			TileLoader tileLoader = new();
-			TetrominoRepository tetrominoRepository = new(tileLoader.LoadTiles());
+			TetrominoRepository tetrominoRepository = new(tileLoader.LoadTiles(), new WallKickData());
 			TetrominoFactory tetrominoFactory = new(tetrominoRepository);
 			Container container = new(tetrominoFactory.Produce());
 			HorizontalMover horizontalMover = new(_grid, container);

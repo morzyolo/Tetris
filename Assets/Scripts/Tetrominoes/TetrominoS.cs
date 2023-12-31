@@ -1,26 +1,28 @@
-﻿using UnityEngine;
+﻿using Transformations;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace Tetrominoes
 {
 	public class TetrominoS : Tetromino
 	{
-		public TetrominoS()
-			: this(null)
+		public TetrominoS(WallKickData wallKickData)
+			: this(null, wallKickData.DefaultWallKicks)
 		{ }
 
-		public TetrominoS(Tile tile)
+		private TetrominoS(Tile tile, Vector2Int[,] wallKicks)
 			: base(
 				nameof(TetrominoS),
 				tile,
-				new Vector2Int[] { new(-1, 1), new(0, 1), new(1, 1), new(2, 1) })
+				new Vector2Int[] { new(-1, 1), new(0, 1), new(1, 1), new(2, 1) },
+				wallKicks)
 		{ }
 
 		public override Tetromino CloneWithTile(Tile tile)
-			=> new TetrominoS(tile);
+			=> new TetrominoS(tile, _wallKicks);
 
 		public override Tetromino Clone()
-			=> new TetrominoS(_tile);
+			=> new TetrominoS(_tile, _wallKicks);
 
 		public override void Rotate(float direction)
 		{

@@ -20,11 +20,15 @@ namespace Tetrominoes
 		public Vector2Int[] Cells => _cells;
 		protected readonly Vector2Int[] _cells;
 
-		protected Tetromino(string name, Tile tile, Vector2Int[] cells)
+		public Vector2Int[,] WallKicks => _wallKicks;
+		protected readonly Vector2Int[,] _wallKicks;
+
+		protected Tetromino(string name, Tile tile, Vector2Int[] cells, Vector2Int[,] wallKicks)
 		{
 			_name = name;
 			_cells = cells;
 			_tile = tile;
+			_wallKicks = wallKicks;
 		}
 
 		public abstract void Rotate(float direction);

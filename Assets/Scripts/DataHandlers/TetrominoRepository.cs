@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Tetrominoes;
+using Transformations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,22 +12,22 @@ namespace DataHandlers
 		public IReadOnlyList<Tetromino> Tetrominoes => _tetrominoes;
 		private readonly List<Tetromino> _tetrominoes = new();
 
-		public TetrominoRepository(Tile[] tiles)
+		public TetrominoRepository(Tile[] tiles, WallKickData wallKickData)
 		{
-			InitTetrominoes(tiles);
+			InitTetrominoes(tiles, wallKickData);
 		}
 
-		private void InitTetrominoes(Tile[] tiles)
+		private void InitTetrominoes(Tile[] tiles, WallKickData wallKickData)
 		{
 			Tetromino[] defaultTetrominoes =
 			{
-				new TetrominoI(),
-				new TetrominoJ(),
-				new TetrominoL(),
-				new TetrominoO(),
-				new TetrominoS(),
-				new TetrominoT(),
-				new TetrominoZ()
+				new TetrominoI(wallKickData),
+				new TetrominoJ(wallKickData),
+				new TetrominoL(wallKickData),
+				new TetrominoO(wallKickData),
+				new TetrominoS(wallKickData),
+				new TetrominoT(wallKickData),
+				new TetrominoZ(wallKickData)
 			};
 
 			foreach (var tetromino in defaultTetrominoes)
