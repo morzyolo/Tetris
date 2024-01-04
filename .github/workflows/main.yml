@@ -46,7 +46,7 @@ jobs:
 
   deploy:
     name: Deploy via GitHub Pages
-    needs: buildWebGL
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: GitHub Pages
