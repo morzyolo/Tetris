@@ -5,71 +5,58 @@ on:
   push:
     branches:
       - main
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
-  buildWebGL:
+  build:
     name: Build for WebGL
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Create LFS file list
-        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
-
-      - name: Restore LFS cache
-        uses: actions/cache@v3
-        id: lfs-cache
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          path: .git/lfs
-          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+          fetch-depth: 0
+          lfs: true
+          submodule: recursive
 
-      - name: Git LFS Pull
-        run: |
-          git lfs pull
-          git add .
-          git reset --hard
-
-      - name: Restore Library cache
+      - name: Cache
         uses: actions/cache@v3
         with:
           path: Library
-          key: Library-build-WebGL
-          restore-keys: |
-            Library-build-
-            Library-
+          key: Library-WebGL
+          restore-keys: Library-
 
-      - uses: game-ci/unity-builder@v4
+      - name: Build Project
+        uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
+          buildName: ${{ github.event.repository.name }}
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v3
         with:
           name: build-WebGL
-          path: build/WebGL
+          path: build/WebGL/${{ github.event.repository.name }}
 
-  deployPages:
-    name: Deploy to GitHub Pages
+  deploy:
+    name: Deploy via GitHub Pages
     needs: buildWebGL
     runs-on: ubuntu-latest
+    environment:
+      name: GitHub Pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Download WebGL Artifact
-        uses: actions/download-artifact@v3
+      - id: deployment
+        name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
         with:
-          name: build-WebGL
-          path: build
-
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
-        with:
-          branch: ghPage
-          folder: build/WebGL
+          artifact_name: build-WebGL
