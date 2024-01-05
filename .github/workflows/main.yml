@@ -1,6 +1,6 @@
 name: Build and Deploy
 
-run-name: "${{ github.workflow }} #${{ github.run_number }}"
+run-name: "${{ github.workflow }}"
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-          submodule: recursive
+          submodules: recursive
 
       - name: Cache
         uses: actions/cache@v3
