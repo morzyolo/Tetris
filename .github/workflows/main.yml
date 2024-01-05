@@ -1,5 +1,7 @@
 name: Build and Deploy
 
+run-name: "${{ github.workflow }} #${{ github.run_number }}"
+
 on:
   workflow_dispatch:
   push:

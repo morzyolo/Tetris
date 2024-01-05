@@ -243,7 +243,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.15218937, g: 0.16637987, b: 0.18867922, a: 0}
+  m_BackGroundColor: {r: 0.15218937, g: 0.16637987, b: 0.18867922, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -265,7 +265,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 100
   field of view: 60
   orthographic: 1
   orthographic size: 10
@@ -343,9 +343,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636ee70fb98f3344197f521f6b2064fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _config: {fileID: 11400000, guid: 775bd9b66404f5a478cefa86fe0370b1, type: 2}
   _grid: {fileID: 664560605}
   _input: {fileID: 668619349}
+  _tiles:
+  - {fileID: 11400000, guid: de6ec26444c12034fb7b962763e9a64a, type: 2}
+  - {fileID: 11400000, guid: 570a5f23fca9307489d806605417a5de, type: 2}
+  - {fileID: 11400000, guid: 2797fd222c40fea4d86aa77c2f8b0fc6, type: 2}
+  - {fileID: 11400000, guid: 619a40320df981f439c16726d6ceb31d, type: 2}
+  - {fileID: 11400000, guid: 1fb0c484058c6544194827e0e8c4d75c, type: 2}
+  - {fileID: 11400000, guid: 63d5d73d3c0f5f84fb05e205e1361111, type: 2}
+  - {fileID: 11400000, guid: 63c2582ebaf307943816c95472e92893, type: 2}
 --- !u!1 &664560603
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,6 +404,7 @@ MonoBehaviour:
   _tilemap: {fileID: 2099781789}
   _gridSetup: {fileID: 664560606}
   _gridSize: {x: 10, y: 18}
+  _spawnPosition: {x: 4, y: 16}
 --- !u!114 &664560606
 MonoBehaviour:
   m_ObjectHideFlags: 0
