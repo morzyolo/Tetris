@@ -7,21 +7,18 @@ namespace TetrominoHandlers
 	{
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
-		private readonly DownMover _downMover;
 		private readonly TetrominoFactory _factory;
 
 		public Switcher(
 			TetrominoGrid grid,
 			Container container,
-			DownMover downMover,
 			TetrominoFactory factory)
 		{
 			_grid = grid;
 			_container = container;
-			_downMover = downMover;
 			_factory = factory;
 
-			_downMover.TetrominoPlaced += SwitchTetromino;
+			_container.OnLanding += SwitchTetromino;
 		}
 
 		private void SwitchTetromino()
@@ -33,7 +30,7 @@ namespace TetrominoHandlers
 
 		public void Dispose()
 		{
-			_downMover.TetrominoPlaced -= SwitchTetromino;
+			_container.OnLanding -= SwitchTetromino;
 		}
 	}
 }

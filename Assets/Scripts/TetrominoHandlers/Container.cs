@@ -1,9 +1,12 @@
-﻿using Tetrominoes;
+﻿using System;
+using Tetrominoes;
 
 namespace TetrominoHandlers
 {
 	public class Container
 	{
+		public event Action OnLanding;
+
 		public Tetromino CurrentTetromino => _currentTetramino;
 		private Tetromino _currentTetramino;
 
@@ -12,5 +15,7 @@ namespace TetrominoHandlers
 
 		public void SwitchTetromino(Tetromino newTetromino)
 			=> _currentTetramino = newTetromino;
+
+		public void Land() => OnLanding?.Invoke();
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
 using TetrominoGridHandlers;
 using UnityEngine;
 
@@ -7,8 +6,6 @@ namespace TetrominoHandlers
 {
 	public class DownMover
 	{
-		public event Action TetrominoPlaced;
-
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
 
@@ -47,7 +44,7 @@ namespace TetrominoHandlers
 						if (!isPlaced)
 						{
 							_grid.ClearRows();
-							TetrominoPlaced?.Invoke();
+							_container.Land();
 						}
 					}
 				}

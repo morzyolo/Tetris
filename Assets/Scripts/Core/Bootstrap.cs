@@ -27,7 +27,7 @@ namespace Core
 			_input.Init(control);
 
 			DownMover downMover = new(_grid, container);
-			_switcher = new(_grid, container, downMover, tetrominoFactory);
+			_switcher = new(_grid, container, tetrominoFactory);
 
 			_grid.SpawnTetromino(container.CurrentTetromino);
 			_ = downMover.Move();
