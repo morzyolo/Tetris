@@ -2,8 +2,8 @@ using DataHandlers;
 using InputHandlers;
 using TetrominoGridHandlers;
 using TetrominoHandlers;
-using Transformations;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Core
 {
@@ -12,12 +12,13 @@ namespace Core
 		[SerializeField] private TetrominoGrid _grid;
 		[SerializeField] private InputHandler _input;
 
+		[SerializeField] private Tile[] _tiles;
+
 		private Switcher _switcher;
 
 		private void Awake()
 		{
-			TileLoader tileLoader = new();
-			TetrominoRepository tetrominoRepository = new(tileLoader.LoadTiles(), new WallKickData());
+			TetrominoRepository tetrominoRepository = new(_tiles);
 			TetrominoFactory tetrominoFactory = new(tetrominoRepository);
 			Container container = new(tetrominoFactory.Produce());
 			HorizontalMover horizontalMover = new(_grid, container);

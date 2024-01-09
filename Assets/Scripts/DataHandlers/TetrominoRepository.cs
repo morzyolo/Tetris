@@ -12,13 +12,14 @@ namespace DataHandlers
 		public IReadOnlyList<Tetromino> Tetrominoes => _tetrominoes;
 		private readonly List<Tetromino> _tetrominoes = new();
 
-		public TetrominoRepository(Tile[] tiles, WallKickData wallKickData)
+		public TetrominoRepository(Tile[] tiles)
 		{
-			InitTetrominoes(tiles, wallKickData);
+			InitTetrominoes(tiles);
 		}
 
-		private void InitTetrominoes(Tile[] tiles, WallKickData wallKickData)
+		private void InitTetrominoes(Tile[] tiles)
 		{
+			WallKickData wallKickData = new();
 			Tetromino[] defaultTetrominoes =
 			{
 				new TetrominoI(wallKickData),
