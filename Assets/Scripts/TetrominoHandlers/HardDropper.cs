@@ -15,6 +15,8 @@ namespace TetrominoHandlers
 		{
 			while (_downMover.TryMoveDown())
 				await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+
+			_downMover.Lock();
 		}
 	}
 }

@@ -27,6 +27,10 @@ namespace TetrominoHandlers
 				_container.CurrentTetromino.Data.RotationIndex = previousRotation;
 				_container.CurrentTetromino.Rotate(-direction);
 			}
+			else
+			{
+				_container.SetTimeToLock();
+			}
 
 			_grid.PlaceTetromino(_container.CurrentTetromino);
 		}

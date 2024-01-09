@@ -24,7 +24,7 @@ namespace Core
 
 			Mover mover = new(_grid, container);
 			Rotator rotator = new(_grid, container);
-			HorizontalMover horizontalMover = new(mover);
+			HorizontalMover horizontalMover = new(mover, container);
 			DownMover downMover = new(_grid, container, mover);
 			HardDropper dropper = new(downMover);
 
