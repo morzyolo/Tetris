@@ -25,7 +25,11 @@ namespace TetrominoHandlers
 			if (!TryWallKicks(_container.CurrentTetromino.Data.RotationIndex, direction))
 			{
 				_container.CurrentTetromino.Data.RotationIndex = previousRotation;
-				Rotate(-direction);
+				_container.CurrentTetromino.Rotate(-direction);
+			}
+			else
+			{
+				_container.SetTimeToLock();
 			}
 
 			_grid.PlaceTetromino(_container.CurrentTetromino);
@@ -38,10 +42,13 @@ namespace TetrominoHandlers
 
 			for (int i = 0; i < wallKicks.GetLength(1); i++)
 			{
-				Vector2Int translation = wallKicks[wallKickIndex, i];
+				Vector2Int newPosition = wallKicks[wallKickIndex, i] + _container.CurrentTetromino.Position;
 
-				if (_grid.TryMoveTetromino(_container.CurrentTetromino, translation))
+				if (_grid.IsValidTetrominoPosition(_container.CurrentTetromino, newPosition))
+				{
+					_container.CurrentTetromino.Position = newPosition;
 					return true;
+				}
 			}
 
 			return false;

@@ -1,25 +1,25 @@
-using TetrominoGridHandlers;
 using UnityEngine;
 
 namespace TetrominoHandlers
 {
 	public class HorizontalMover
 	{
-		private readonly TetrominoGrid _grid;
+		private readonly Mover _mover;
 		private readonly Container _container;
 
-		public HorizontalMover(TetrominoGrid grid, Container tetramino)
+		public HorizontalMover(Mover mover, Container container)
 		{
-			_grid = grid;
-			_container = tetramino;
+			_mover = mover;
+			_container = container;
 		}
 
 		public void Move(float direction)
 		{
-			_grid.ClearTetrominoTiles(_container.CurrentTetromino);
-			Vector2Int translation = direction < 0 ? Vector2Int.left : Vector2Int.right;
-			_grid.TryMoveTetromino(_container.CurrentTetromino, translation);
-			_grid.PlaceTetromino(_container.CurrentTetromino);
+			bool canMove = _mover.TryTranslateTetromino(
+				direction < 0 ? Vector2Int.left : Vector2Int.right);
+
+			if (canMove)
+				_container.SetTimeToLock();
 		}
 	}
 }

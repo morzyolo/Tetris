@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
 using TetrominoGridHandlers;
 using UnityEngine;
 
@@ -7,51 +6,61 @@ namespace TetrominoHandlers
 {
 	public class DownMover
 	{
-		public event Action TetrominoPlaced;
-
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
+		private readonly Mover _mover;
 
-		private readonly float _moveDelay = 0.35f;
+		private readonly float _moveDelay = 0.40f;
+		private float _timeRemaining;
 
-		public DownMover(TetrominoGrid grid, Container container)
+		public DownMover(TetrominoGrid grid, Container container, Mover mover)
 		{
 			_grid = grid;
 			_container = container;
+			_mover = mover;
 		}
 
 		public async UniTaskVoid Move()
 		{
-			float timeRemaining = _moveDelay;
+			_timeRemaining = _moveDelay;
 
 			while (true)
 			{
 				await UniTask.Yield();
 
-				bool isPlaced = false;
-				while (!isPlaced)
+				bool canMove = true;
+				while (canMove)
 				{
 					await UniTask.Yield(PlayerLoopTiming.Update);
-					timeRemaining -= Time.deltaTime;
+					_timeRemaining -= Time.deltaTime;
 
-					if (timeRemaining < 0)
+					if (_timeRemaining < 0)
 					{
-						timeRemaining += _moveDelay;
+						canMove = TryMoveDown();
 
-						_grid.ClearTetrominoTiles(_container.CurrentTetromino);
-
-						isPlaced = _grid.TryMoveTetromino(_container.CurrentTetromino, Vector2Int.down);
-
-						_grid.PlaceTetromino(_container.CurrentTetromino);
-
-						if (!isPlaced)
+						if (!canMove && _container.TimeToLock > 0)
 						{
-							_grid.ClearRows();
-							TetrominoPlaced?.Invoke();
+							_timeRemaining += _container.TimeToLock;
+							_container.TimeToLock = 0;
+							canMove = true;
 						}
 					}
 				}
+
+				Lock();
 			}
+		}
+
+		public bool TryMoveDown()
+		{
+			_timeRemaining = _moveDelay;
+			return _mover.TryTranslateTetromino(Vector2Int.down);
+		}
+
+		public void Lock()
+		{
+			_grid.ClearRows();
+			_container.Land();
 		}
 	}
 }

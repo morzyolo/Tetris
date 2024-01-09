@@ -46,6 +46,15 @@ namespace InputHandlers
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HardDrop"",
+                    ""type"": ""Button"",
+                    ""id"": ""371b2568-2839-44ee-a34c-5425c8bd8d20"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -114,6 +123,17 @@ namespace InputHandlers
                     ""action"": ""Rotated"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d63905fe-1c4b-461e-a066-3fd86b8e664f"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HardDrop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -124,6 +144,7 @@ namespace InputHandlers
             m_TetrominoControl = asset.FindActionMap("TetrominoControl", throwIfNotFound: true);
             m_TetrominoControl_Moved = m_TetrominoControl.FindAction("Moved", throwIfNotFound: true);
             m_TetrominoControl_Rotated = m_TetrominoControl.FindAction("Rotated", throwIfNotFound: true);
+            m_TetrominoControl_HardDrop = m_TetrominoControl.FindAction("HardDrop", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -187,12 +208,14 @@ namespace InputHandlers
         private List<ITetrominoControlActions> m_TetrominoControlActionsCallbackInterfaces = new List<ITetrominoControlActions>();
         private readonly InputAction m_TetrominoControl_Moved;
         private readonly InputAction m_TetrominoControl_Rotated;
+        private readonly InputAction m_TetrominoControl_HardDrop;
         public struct TetrominoControlActions
         {
             private @InputMap m_Wrapper;
             public TetrominoControlActions(@InputMap wrapper) { m_Wrapper = wrapper; }
             public InputAction @Moved => m_Wrapper.m_TetrominoControl_Moved;
             public InputAction @Rotated => m_Wrapper.m_TetrominoControl_Rotated;
+            public InputAction @HardDrop => m_Wrapper.m_TetrominoControl_HardDrop;
             public InputActionMap Get() { return m_Wrapper.m_TetrominoControl; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -208,6 +231,9 @@ namespace InputHandlers
                 @Rotated.started += instance.OnRotated;
                 @Rotated.performed += instance.OnRotated;
                 @Rotated.canceled += instance.OnRotated;
+                @HardDrop.started += instance.OnHardDrop;
+                @HardDrop.performed += instance.OnHardDrop;
+                @HardDrop.canceled += instance.OnHardDrop;
             }
 
             private void UnregisterCallbacks(ITetrominoControlActions instance)
@@ -218,6 +244,9 @@ namespace InputHandlers
                 @Rotated.started -= instance.OnRotated;
                 @Rotated.performed -= instance.OnRotated;
                 @Rotated.canceled -= instance.OnRotated;
+                @HardDrop.started -= instance.OnHardDrop;
+                @HardDrop.performed -= instance.OnHardDrop;
+                @HardDrop.canceled -= instance.OnHardDrop;
             }
 
             public void RemoveCallbacks(ITetrominoControlActions instance)
@@ -239,6 +268,7 @@ namespace InputHandlers
         {
             void OnMoved(InputAction.CallbackContext context);
             void OnRotated(InputAction.CallbackContext context);
+            void OnHardDrop(InputAction.CallbackContext context);
         }
     }
 }
