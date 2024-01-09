@@ -6,6 +6,8 @@ namespace TetrominoGridHandlers
 {
 	public class TetrominoGrid : MonoBehaviour
 	{
+		public Vector2Int GridSize => _gridSize;
+
 		[SerializeField] private Tilemap _tilemap;
 		[SerializeField] private GridSetup _gridSetup;
 
@@ -13,9 +15,12 @@ namespace TetrominoGridHandlers
 		[SerializeField] private Vector2Int _gridSize = new(10, 18);
 		[SerializeField] private Vector2Int _spawnPosition = new(4, 16);
 
+		private GridRowCleaner _rowCleaner;
+
 		private void Awake()
 		{
 			_gridSetup.ResizeGrid(_gridSize);
+			_rowCleaner = new(this, _tilemap);
 		}
 
 		public void SpawnTetromino(Tetromino tetromino)
@@ -62,49 +67,7 @@ namespace TetrominoGridHandlers
 		public void PlaceTetromino(Tetromino tetromino)
 			=> PlaceTetrominoTiles(tetromino, tetromino.Data.Tile);
 
-		public void ClearRows()
-		{
-			int row = 0;
-			int rowShift = 0;
-
-			while (row < _gridSize.y)
-			{
-				if (IsLineFull(row))
-					rowShift++;
-				else
-					ShiftRow(row, rowShift);
-
-				row++;
-			}
-
-			if(rowShift > 0)
-			{
-				for (int y = _gridSize.y - rowShift; y < _gridSize.y; y++)
-					for (int x = 0; x < _gridSize.x; x++)
-						_tilemap.SetTile(new(x, y), null);
-			}
-		}
-
-		private bool IsLineFull(int row)
-		{
-			for (int i = 0; i < _gridSize.x; i++)
-				if (!_tilemap.HasTile(new(i, row)))
-					return false;
-
-			return true;
-		}
-
-		private void ShiftRow(int row, int shift)
-		{
-			if (shift == 0)
-				return;
-
-			for (int i = 0; i < _gridSize.x; i++)
-			{
-				TileBase tile = _tilemap.GetTile(new(i, row));
-				_tilemap.SetTile(new(i, row - shift), tile);
-			}
-		}
+		public void ClearRows() => _rowCleaner.ClearRows();
 
 		private void PlaceTetrominoTiles(Tetromino tetromino, Tile tile)
 		{
