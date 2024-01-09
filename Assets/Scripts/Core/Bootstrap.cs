@@ -22,17 +22,18 @@ namespace Core
 			TetrominoFactory tetrominoFactory = new(tetrominoRepository);
 			Container container = new(tetrominoFactory.Produce());
 
-			HorizontalMover horizontalMover = new(_grid, container);
+			Mover mover = new(_grid, container);
 			Rotator rotator = new(_grid, container);
-			HardDropper dropper = new(_grid, container);
+			HorizontalMover horizontalMover = new(mover);
+			DownMover downMover = new(_grid, container, mover);
+			HardDropper dropper = new(downMover);
 
 			Control control = new(horizontalMover, rotator, dropper);
 			_input.Init(control);
 
-			DownMover downMover = new(_grid, container);
 			_switcher = new(_grid, container, tetrominoFactory);
+			_switcher.SpawnTetromino();
 
-			_grid.SpawnTetromino(container.CurrentTetromino);
 			_ = downMover.Move();
 		}
 

@@ -8,13 +8,15 @@ namespace TetrominoHandlers
 	{
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
+		private readonly Mover _mover;
 
 		private readonly float _moveDelay = 0.35f;
 
-		public DownMover(TetrominoGrid grid, Container container)
+		public DownMover(TetrominoGrid grid, Container container, Mover mover)
 		{
 			_grid = grid;
 			_container = container;
+			_mover = mover;
 		}
 
 		public async UniTaskVoid Move()
@@ -25,8 +27,8 @@ namespace TetrominoHandlers
 			{
 				await UniTask.Yield();
 
-				bool isPlaced = false;
-				while (!isPlaced)
+				bool canMove = true;
+				while (canMove)
 				{
 					await UniTask.Yield(PlayerLoopTiming.Update);
 					timeRemaining -= Time.deltaTime;
@@ -35,20 +37,23 @@ namespace TetrominoHandlers
 					{
 						timeRemaining += _moveDelay;
 
-						_grid.ClearTetrominoTiles(_container.CurrentTetromino);
-
-						isPlaced = _grid.TryMoveTetromino(_container.CurrentTetromino, Vector2Int.down);
-
-						_grid.PlaceTetromino(_container.CurrentTetromino);
-
-						if (!isPlaced)
-						{
-							_grid.ClearRows();
-							_container.Land();
-						}
+						canMove = TryMoveDown();
 					}
 				}
 			}
+		}
+
+		public bool TryMoveDown()
+		{
+			bool canMove = _mover.TryTranslateTetromino(Vector2Int.down);
+
+			if (!canMove)
+			{
+				_grid.ClearRows();
+				_container.Land();
+			}
+
+			return canMove;
 		}
 	}
 }

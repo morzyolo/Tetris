@@ -1,34 +1,20 @@
 ﻿using Cysharp.Threading.Tasks;
-using TetrominoGridHandlers;
-using UnityEngine;
 
 namespace TetrominoHandlers
 {
 	public class HardDropper
 	{
-		private readonly TetrominoGrid _grid;
-		private readonly Container _container;
+		private readonly DownMover _downMover;
 
-		public HardDropper(TetrominoGrid grid, Container container)
+		public HardDropper(DownMover downMover)
 		{
-			_grid = grid;
-			_container = container;
+			_downMover = downMover;
 		}
 
 		public async UniTaskVoid Drop()
 		{
-			bool canMove;
-			do
-			{
-				_grid.ClearTetrominoTiles(_container.CurrentTetromino);
-				canMove = _grid.TryMoveTetromino(_container.CurrentTetromino, Vector2Int.down);
-				_grid.PlaceTetromino(_container.CurrentTetromino);
-
+			while (_downMover.TryMoveDown())
 				await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
-			} while (canMove);
-
-			_grid.ClearRows();
-			_container.Land();
 		}
 	}
 }

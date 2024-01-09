@@ -7,6 +7,7 @@ namespace TetrominoGridHandlers
 	public class TetrominoGrid : MonoBehaviour
 	{
 		public Vector2Int GridSize => _gridSize;
+		public Vector2Int SpawnPosition => _spawnPosition;
 
 		[SerializeField] private Tilemap _tilemap;
 		[SerializeField] private GridSetup _gridSetup;
@@ -23,27 +24,15 @@ namespace TetrominoGridHandlers
 			_rowCleaner = new(this, _tilemap);
 		}
 
-		public void SpawnTetromino(Tetromino tetromino)
-		{
-			tetromino.Position = _spawnPosition;
-			PlaceTetrominoTiles(tetromino, tetromino.Data.Tile);
-		}
+		public void ClearRows() => _rowCleaner.ClearRows();
 
-		public bool TryMoveTetromino(Tetromino tetromino, Vector2Int translation)
-		{
-			Vector2Int newPosition = tetromino.Position;
-			newPosition.x += translation.x;
-			newPosition.y += translation.y;
+		public void PlaceTetromino(Tetromino tetromino)
+			=> PlaceTetrominoTiles(tetromino, tetromino.Data.Tile);
 
-			bool isValid = IsValidTetrominoPosition(newPosition, tetromino);
+		public void ClearTetrominoTiles(Tetromino tetromino)
+			=> PlaceTetrominoTiles(tetromino, null);
 
-			if (isValid)
-				tetromino.Position = newPosition;
-
-			return isValid;
-		}
-
-		public bool IsValidTetrominoPosition(Vector2Int position, Tetromino tetromino)
+		public bool IsValidTetrominoPosition(Tetromino tetromino, Vector2Int position)
 		{
 			Vector2Int[] cells = tetromino.Data.Cells;
 
@@ -60,14 +49,6 @@ namespace TetrominoGridHandlers
 
 			return true;
 		}
-
-		public void ClearTetrominoTiles(Tetromino tetromino)
-			=> PlaceTetrominoTiles(tetromino, null);
-
-		public void PlaceTetromino(Tetromino tetromino)
-			=> PlaceTetrominoTiles(tetromino, tetromino.Data.Tile);
-
-		public void ClearRows() => _rowCleaner.ClearRows();
 
 		private void PlaceTetrominoTiles(Tetromino tetromino, Tile tile)
 		{

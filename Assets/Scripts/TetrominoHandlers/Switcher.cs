@@ -25,7 +25,13 @@ namespace TetrominoHandlers
 		{
 			var tetromino = _factory.Produce();
 			_container.SwitchTetromino(tetromino);
-			_grid.SpawnTetromino(tetromino);
+			SpawnTetromino();
+		}
+
+		public void SpawnTetromino()
+		{
+			_container.CurrentTetromino.Position = _grid.SpawnPosition;
+			_grid.PlaceTetromino(_container.CurrentTetromino);
 		}
 
 		public void Dispose()
