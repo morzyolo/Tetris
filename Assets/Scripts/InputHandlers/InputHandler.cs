@@ -21,12 +21,14 @@ namespace InputHandlers
 		{
 			_input.TetrominoControl.Moved.started += _control.Move;
 			_input.TetrominoControl.Rotated.started += _control.Rotate;
+			_input.TetrominoControl.HardDrop.started += _control.HardDrop;
 		}
 
 		private void Unsub()
 		{
 			_input.TetrominoControl.Moved.started -= _control.Move;
 			_input.TetrominoControl.Rotated.started -= _control.Rotate;
+			_input.TetrominoControl.HardDrop.started -= _control.HardDrop;
 		}
 
 		private void OnDisable()

@@ -21,9 +21,12 @@ namespace Core
 			TetrominoRepository tetrominoRepository = new(_tiles);
 			TetrominoFactory tetrominoFactory = new(tetrominoRepository);
 			Container container = new(tetrominoFactory.Produce());
+
 			HorizontalMover horizontalMover = new(_grid, container);
 			Rotator rotator = new(_grid, container);
-			Control control = new(horizontalMover, rotator);
+			HardDropper dropper = new(_grid, container);
+
+			Control control = new(horizontalMover, rotator, dropper);
 			_input.Init(control);
 
 			DownMover downMover = new(_grid, container);
