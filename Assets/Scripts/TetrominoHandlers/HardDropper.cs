@@ -4,9 +4,9 @@ namespace TetrominoHandlers
 {
 	public class HardDropper
 	{
-		private readonly DownMover _downMover;
+		private readonly PeriodicDownMover _downMover;
 
-		public HardDropper(DownMover downMover)
+		public HardDropper(PeriodicDownMover downMover)
 		{
 			_downMover = downMover;
 		}

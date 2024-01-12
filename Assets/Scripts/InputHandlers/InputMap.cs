@@ -55,6 +55,15 @@ namespace InputHandlers
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DownMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""3a9a8b14-022c-4923-a9d3-4cdea3101739"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -134,6 +143,17 @@ namespace InputHandlers
                     ""action"": ""HardDrop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""85c899ef-fbae-4408-9f96-7248c7458842"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DownMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -145,6 +165,7 @@ namespace InputHandlers
             m_TetrominoControl_Moved = m_TetrominoControl.FindAction("Moved", throwIfNotFound: true);
             m_TetrominoControl_Rotated = m_TetrominoControl.FindAction("Rotated", throwIfNotFound: true);
             m_TetrominoControl_HardDrop = m_TetrominoControl.FindAction("HardDrop", throwIfNotFound: true);
+            m_TetrominoControl_DownMove = m_TetrominoControl.FindAction("DownMove", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -209,6 +230,7 @@ namespace InputHandlers
         private readonly InputAction m_TetrominoControl_Moved;
         private readonly InputAction m_TetrominoControl_Rotated;
         private readonly InputAction m_TetrominoControl_HardDrop;
+        private readonly InputAction m_TetrominoControl_DownMove;
         public struct TetrominoControlActions
         {
             private @InputMap m_Wrapper;
@@ -216,6 +238,7 @@ namespace InputHandlers
             public InputAction @Moved => m_Wrapper.m_TetrominoControl_Moved;
             public InputAction @Rotated => m_Wrapper.m_TetrominoControl_Rotated;
             public InputAction @HardDrop => m_Wrapper.m_TetrominoControl_HardDrop;
+            public InputAction @DownMove => m_Wrapper.m_TetrominoControl_DownMove;
             public InputActionMap Get() { return m_Wrapper.m_TetrominoControl; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -234,6 +257,9 @@ namespace InputHandlers
                 @HardDrop.started += instance.OnHardDrop;
                 @HardDrop.performed += instance.OnHardDrop;
                 @HardDrop.canceled += instance.OnHardDrop;
+                @DownMove.started += instance.OnDownMove;
+                @DownMove.performed += instance.OnDownMove;
+                @DownMove.canceled += instance.OnDownMove;
             }
 
             private void UnregisterCallbacks(ITetrominoControlActions instance)
@@ -247,6 +273,9 @@ namespace InputHandlers
                 @HardDrop.started -= instance.OnHardDrop;
                 @HardDrop.performed -= instance.OnHardDrop;
                 @HardDrop.canceled -= instance.OnHardDrop;
+                @DownMove.started -= instance.OnDownMove;
+                @DownMove.performed -= instance.OnDownMove;
+                @DownMove.canceled -= instance.OnDownMove;
             }
 
             public void RemoveCallbacks(ITetrominoControlActions instance)
@@ -269,6 +298,7 @@ namespace InputHandlers
             void OnMoved(InputAction.CallbackContext context);
             void OnRotated(InputAction.CallbackContext context);
             void OnHardDrop(InputAction.CallbackContext context);
+            void OnDownMove(InputAction.CallbackContext context);
         }
     }
 }

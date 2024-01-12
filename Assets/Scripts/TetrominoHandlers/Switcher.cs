@@ -18,7 +18,7 @@ namespace TetrominoHandlers
 			_container = container;
 			_factory = factory;
 
-			_container.OnLanding += SwitchTetromino;
+			_container.OnLanded += SwitchTetromino;
 		}
 
 		private void SwitchTetromino()
@@ -36,7 +36,7 @@ namespace TetrominoHandlers
 
 		public void Dispose()
 		{
-			_container.OnLanding -= SwitchTetromino;
+			_container.OnLanded -= SwitchTetromino;
 		}
 	}
 }

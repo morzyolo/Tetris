@@ -22,6 +22,8 @@ namespace InputHandlers
 			_input.TetrominoControl.Moved.started += _control.Move;
 			_input.TetrominoControl.Rotated.started += _control.Rotate;
 			_input.TetrominoControl.HardDrop.started += _control.HardDrop;
+			_input.TetrominoControl.DownMove.started += _control.MoveDown;
+			_input.TetrominoControl.DownMove.canceled += _control.MoveDown;
 		}
 
 		private void Unsub()
@@ -29,6 +31,8 @@ namespace InputHandlers
 			_input.TetrominoControl.Moved.started -= _control.Move;
 			_input.TetrominoControl.Rotated.started -= _control.Rotate;
 			_input.TetrominoControl.HardDrop.started -= _control.HardDrop;
+			_input.TetrominoControl.DownMove.started -= _control.MoveDown;
+			_input.TetrominoControl.DownMove.canceled -= _control.MoveDown;
 		}
 
 		private void OnDisable()
