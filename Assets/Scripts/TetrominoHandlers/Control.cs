@@ -1,27 +1,47 @@
-﻿using UnityEngine.InputSystem;
+﻿using Cysharp.Threading.Tasks;
+using TetrominoGridHandlers;
+using UnityEngine.InputSystem;
 
 namespace TetrominoHandlers
 {
 	public class Control
 	{
 		private readonly Rotator _rotator;
-		private readonly HorizontalMover _mover;
 		private readonly HardDropper _dropper;
+		private readonly HorizontalMover _horizontalMover;
+		private readonly PeriodicDownMover _periodicMover;
+		private readonly MoveDelayScaler _moveDelayScaler;
 
-		public Control(HorizontalMover mover, Rotator rotator, HardDropper dropper)
+		public Control(TetrominoGrid grid, Container container)
 		{
-			_rotator = rotator;
-			_mover = mover;
-			_dropper = dropper;
+			Mover mover = new(grid, container);
+			_rotator = new(grid, container);
+			_horizontalMover = new(mover, container);
+			_periodicMover = new(grid, container, mover);
+
+			_dropper = new(_periodicMover);
+			_moveDelayScaler = new(_periodicMover);
 		}
 
 		public void Move(InputAction.CallbackContext context)
-			=> _mover.Move(context.ReadValue<float>());
+			=> _horizontalMover.Move(context.ReadValue<float>());
 
 		public void Rotate(InputAction.CallbackContext context)
 			=> _rotator.Rotate(context.ReadValue<float>());
 
 		public void HardDrop(InputAction.CallbackContext context)
 			=> _ = _dropper.Drop();
+
+		public void MoveDown(InputAction.CallbackContext context)
+		{
+			bool isStarted = context.ReadValueAsButton();
+
+			if (isStarted)
+				_moveDelayScaler.SetAcceleratedDelay();
+			else
+				_moveDelayScaler.SetDefaultDelay();
+		}
+
+		public UniTaskVoid StartMove() => _periodicMover.Move();
 	}
 }
