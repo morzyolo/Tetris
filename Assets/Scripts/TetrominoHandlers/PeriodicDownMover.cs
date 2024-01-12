@@ -64,5 +64,12 @@ namespace TetrominoHandlers
 			_grid.ClearRows();
 			_container.Land();
 		}
+
+		public void ScaleMoveDelay(float scale)
+		{
+			float newMoveDelay = _defaultMoveDelay * scale;
+			_timeRemaining = Mathf.Lerp(0, newMoveDelay, _timeRemaining / _currentMoveDelay);
+			_currentMoveDelay = newMoveDelay;
+		}
 	}
 }
