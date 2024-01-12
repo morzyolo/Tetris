@@ -4,26 +4,28 @@ using UnityEngine;
 
 namespace TetrominoHandlers
 {
-	public class DownMover
+	public class PeriodicDownMover
 	{
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
 		private readonly Mover _mover;
 
-		private readonly float _moveDelay = 0.40f;
+		private readonly float _defaultMoveDelay = 0.5f;
+		private float _currentMoveDelay;
 		private float _timeRemaining;
 
-		public DownMover(TetrominoGrid grid, Container container, Mover mover)
+		public PeriodicDownMover(TetrominoGrid grid, Container container, Mover mover)
 		{
 			_grid = grid;
 			_container = container;
 			_mover = mover;
+
+			_currentMoveDelay = _defaultMoveDelay;
+			_timeRemaining = _currentMoveDelay;
 		}
 
 		public async UniTaskVoid Move()
 		{
-			_timeRemaining = _moveDelay;
-
 			while (true)
 			{
 				await UniTask.Yield();
@@ -53,7 +55,7 @@ namespace TetrominoHandlers
 
 		public bool TryMoveDown()
 		{
-			_timeRemaining = _moveDelay;
+			_timeRemaining = _currentMoveDelay;
 			return _mover.TryTranslateTetromino(Vector2Int.down);
 		}
 
