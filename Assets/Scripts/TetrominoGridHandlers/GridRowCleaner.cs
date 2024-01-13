@@ -14,48 +14,66 @@ namespace TetrominoGridHandlers
 			_tilemap = tilemap;
 		}
 
-		public void ClearRows()
+		public void ClearRows(int minRow, int maxRow)
 		{
-			Vector2Int gridSize = _grid.GridSize;
-			int row = 0;
+			if (minRow > maxRow)
+				return;
+
+			RectInt gridBoundary = _grid.GridBoundary;
 			int rowShift = 0;
 
-			while (row < gridSize.y)
-			{
-				if (IsLineFull(row, 0, gridSize.x))
-					rowShift++;
-				else
-					ShiftRow(row, rowShift, 0, gridSize.x);
-
-				row++;
-			}
+			CheckRows(minRow, maxRow, gridBoundary, ref rowShift);
 
 			if (rowShift > 0)
 			{
-				for (int y = gridSize.y - rowShift; y < gridSize.y; y++)
-					for (int x = 0; x < gridSize.x; x++)
+				ShiftRows(maxRow + 1, gridBoundary.yMax - 1, rowShift, gridBoundary);
+
+				for (int y = gridBoundary.yMax - rowShift; y < gridBoundary.yMax; y++)
+					for (int x = gridBoundary.xMin; x < gridBoundary.xMax; x++)
 						_tilemap.SetTile(new(x, y), null);
 			}
 		}
 
-		private bool IsLineFull(int row, int from, int to)
+		private void CheckRows(int from, int to, RectInt boundary, ref int rowShift)
 		{
-			for (int i = from; i < to; i++)
-				if (!_tilemap.HasTile(new(i, row)))
+			int row = from;
+
+			while (row <= to)
+			{
+				if (IsLineFull(row, boundary))
+					rowShift++;
+				else
+					ShiftRows(row, row, rowShift, boundary);
+
+				row++;
+			}
+		}
+
+		private bool IsLineFull(int row, RectInt boundary)
+		{
+			for (int x = boundary.xMin; x < boundary.xMax; x++)
+				if (!_tilemap.HasTile(new(x, row)))
 					return false;
 
 			return true;
 		}
 
-		private void ShiftRow(int row, int shift, int from, int to)
+		private void ShiftRows(int from, int to, int rowShift, RectInt boundary)
 		{
-			if (shift == 0)
+			if (rowShift == 0)
 				return;
 
-			for (int i = from; i < to; i++)
+			int row = from;
+
+			while (row <= to)
 			{
-				TileBase tile = _tilemap.GetTile(new(i, row));
-				_tilemap.SetTile(new(i, row - shift), tile);
+				for (int x = boundary.xMin; x < boundary.xMax; x++)
+				{
+					TileBase tile = _tilemap.GetTile(new(x, row));
+					_tilemap.SetTile(new(x, row - rowShift), tile);
+				}
+
+				row++;
 			}
 		}
 	}

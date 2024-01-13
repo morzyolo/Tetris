@@ -6,7 +6,7 @@ namespace TetrominoGridHandlers
 {
 	public class TetrominoGrid : MonoBehaviour
 	{
-		public Vector2Int GridSize => _gridSize;
+		public RectInt GridBoundary => _gridBoundary;
 		public Vector2Int SpawnPosition => _spawnPosition;
 
 		[SerializeField] private Tilemap _tilemap;
@@ -16,15 +16,17 @@ namespace TetrominoGridHandlers
 		[SerializeField] private Vector2Int _gridSize = new(10, 18);
 		[SerializeField] private Vector2Int _spawnPosition = new(4, 16);
 
+		private RectInt _gridBoundary;
 		private GridRowCleaner _rowCleaner;
 
 		private void Awake()
 		{
 			_gridSetup.ResizeGrid(_gridSize);
+			_gridBoundary = new(0, 0, _gridSize.x, _gridSize.y);
 			_rowCleaner = new(this, _tilemap);
 		}
 
-		public void ClearRows() => _rowCleaner.ClearRows();
+		public void ClearRows(int minRow, int maxRow) => _rowCleaner.ClearRows(minRow, maxRow);
 
 		public void PlaceTetromino(Tetromino tetromino)
 			=> PlaceTetrominoTiles(tetromino, tetromino.Data.Tile);
@@ -61,7 +63,6 @@ namespace TetrominoGridHandlers
 		}
 
 		private bool IsContainsPosition(Vector2Int position)
-			=> position.x >= 0 && position.x < _gridSize.x
-				&& position.y >= 0 && position.y < _gridSize.y;
+			=> _gridBoundary.Contains(position);
 	}
 }

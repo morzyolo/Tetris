@@ -59,17 +59,35 @@ namespace TetrominoHandlers
 			return _mover.TryTranslateTetromino(Vector2Int.down);
 		}
 
-		public void Lock()
-		{
-			_grid.ClearRows();
-			_container.Land();
-		}
-
 		public void ScaleMoveDelay(float scale)
 		{
 			float newMoveDelay = _defaultMoveDelay * scale;
 			_timeRemaining = Mathf.Lerp(0, newMoveDelay, _timeRemaining / _currentMoveDelay);
 			_currentMoveDelay = newMoveDelay;
+		}
+
+		public void Lock()
+		{
+			(int min, int max) = GetTetrominoRowBoundary();
+			_grid.ClearRows(min, max);
+			_container.Land();
+		}
+
+		private (int min, int max) GetTetrominoRowBoundary()
+		{
+			var cells = _container.CurrentTetromino.Data.Cells;
+
+			int minPosition = int.MaxValue;
+			int maxPosition = int.MinValue;
+
+			foreach (var cell in cells)
+			{
+				minPosition = Mathf.Min(minPosition, cell.y);
+				maxPosition = Mathf.Max(maxPosition, cell.y);
+			}
+
+			return (minPosition + _container.CurrentTetromino.Position.y,
+				maxPosition + _container.CurrentTetromino.Position.y);
 		}
 	}
 }
