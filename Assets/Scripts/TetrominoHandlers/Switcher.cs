@@ -3,7 +3,7 @@ using TetrominoGridHandlers;
 
 namespace TetrominoHandlers
 {
-	public class Switcher : IDisposable
+	public sealed class Switcher : IDisposable
 	{
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
