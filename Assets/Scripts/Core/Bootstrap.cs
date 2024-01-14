@@ -1,20 +1,26 @@
 using DataHandlers;
 using InputHandlers;
+using Presenters;
+using System;
+using System.Collections.Generic;
 using TetrominoGridHandlers;
 using TetrominoHandlers;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Views;
 
 namespace Core
 {
 	public class Bootstrap : MonoBehaviour
 	{
 		[SerializeField] private TetrominoGrid _grid;
-		[SerializeField] private InputHandler _input;
 
 		[SerializeField] private Tile[] _tiles;
 
-		private Switcher _switcher;
+		[SerializeField] private StartView _startView;
+
+
+		private readonly List<IDisposable> _disposableList = new();
 
 		private void Awake()
 		{
@@ -23,17 +29,21 @@ namespace Core
 			Container container = new(tetrominoFactory.Produce());
 
 			Control control = new(_grid, container);
-			_input.Init(control);
+			InputHandler input = new(control);
 
-			_switcher = new(_grid, container, tetrominoFactory);
-			_switcher.SpawnTetromino();
+			Switcher switcher = new(_grid, container, tetrominoFactory);
 
-			_ = control.StartMove();
+			StartPresenter startPresenter = new(_startView, control, switcher, input);
+
+			_disposableList.Add(input);
+			_disposableList.Add(switcher);
+			_disposableList.Add(startPresenter);
 		}
 
 		private void OnDisable()
 		{
-			_switcher.Dispose();
+			foreach (var disposable in _disposableList)
+				disposable.Dispose();
 		}
 	}
 }

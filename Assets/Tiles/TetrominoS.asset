@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TetrominoS
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: 4a339f7e230274647b8e24ed47ca3d31, type: 3}
-  m_Color: {r: 0.59263754, g: 0.12922749, b: 0.8301887, a: 1}
+  m_Color: {r: 0.12941174, g: 0.810812, b: 0.8980392, a: 1}
   m_Transform:
     e00: 1
     e01: 0
