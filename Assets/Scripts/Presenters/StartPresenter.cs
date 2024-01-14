@@ -1,6 +1,7 @@
 using InputHandlers;
 using System;
 using TetrominoHandlers;
+using UnityEngine;
 using Views;
 
 namespace Presenters
@@ -33,11 +34,11 @@ namespace Presenters
 			_view.OnPlayButtonPressed -= StartGame;
 		}
 
-		private void StartGame()
+		private void StartGame(int seed)
 		{
 			_view.Hide();
 			_input.Enable();
-			_switcher.SpawnTetromino();
+			_switcher.SpawnInitialTetromino(seed);
 			_ = _control.StartMove();
 		}
 	}

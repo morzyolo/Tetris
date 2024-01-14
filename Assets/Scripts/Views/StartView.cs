@@ -1,4 +1,5 @@
 using System;
+using UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,11 +7,12 @@ namespace Views
 {
 	public class StartView : MonoBehaviour
 	{
-		public event Action OnPlayButtonPressed;
+		public event Action<int> OnPlayButtonPressed;
 
 		[SerializeField] private Button _playButton;
+		[SerializeField] private SeedInputField _inputField;
 
-		private void NotifyPlay() => OnPlayButtonPressed?.Invoke();
+		private void NotifyPlay() => OnPlayButtonPressed?.Invoke(_inputField.Seed);
 
 		public void Show() => SetActive(true);
 

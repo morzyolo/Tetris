@@ -21,6 +21,12 @@ namespace TetrominoHandlers
 			_container.OnLanded += SwitchTetromino;
 		}
 
+		public void SpawnInitialTetromino(int seed)
+		{
+			_factory.ChangeSeed(seed);
+			SpawnTetromino();
+		}
+
 		private void SwitchTetromino()
 		{
 			var tetromino = _factory.Produce();
@@ -28,7 +34,7 @@ namespace TetrominoHandlers
 			SpawnTetromino();
 		}
 
-		public void SpawnTetromino()
+		private void SpawnTetromino()
 		{
 			_container.CurrentTetromino.Position = _grid.SpawnPosition;
 			_grid.PlaceTetromino(_container.CurrentTetromino);
