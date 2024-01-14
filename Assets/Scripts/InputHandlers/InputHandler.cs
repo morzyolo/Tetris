@@ -1,20 +1,31 @@
+using System;
 using TetrominoHandlers;
-using UnityEngine;
 
 namespace InputHandlers
 {
-	public class InputHandler : MonoBehaviour
+	public sealed class InputHandler : IDisposable
 	{
-		private Control _control;
-		private InputMap _input;
+		private readonly Control _control;
+		private readonly InputMap _input;
 
-		public void Init(Control control)
+		public InputHandler(Control control)
 		{
 			_input = new InputMap();
-			_input.Enable();
+			Enable();
 
 			_control = control;
 			Sub();
+		}
+
+		public void Enable() => _input.Enable();
+
+		public void Disable() => _input.Disable();
+
+		public void Dispose()
+		{
+			Unsub();
+			Disable();
+			_input.Dispose();
 		}
 
 		private void Sub()
@@ -33,13 +44,6 @@ namespace InputHandlers
 			_input.TetrominoControl.HardDrop.started -= _control.HardDrop;
 			_input.TetrominoControl.DownMove.started -= _control.MoveDown;
 			_input.TetrominoControl.DownMove.canceled -= _control.MoveDown;
-		}
-
-		private void OnDisable()
-		{
-			Unsub();
-			_input.Disable();
-			_input.Dispose();
 		}
 	}
 }
