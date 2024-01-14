@@ -35,6 +35,8 @@ namespace Presenters
 
 		private void StartGame()
 		{
+			_view.Hide();
+			_input.Enable();
 			_switcher.SpawnTetromino();
 			_ = _control.StartMove();
 		}
