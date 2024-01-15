@@ -1,10 +1,13 @@
 ﻿using System;
 using TetrominoGridHandlers;
+using UnityEngine;
 
 namespace TetrominoHandlers
 {
 	public sealed class Switcher : IDisposable
 	{
+		public event Action OntSwitchFailed;
+
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
 		private readonly TetrominoFactory _factory;
@@ -31,7 +34,22 @@ namespace TetrominoHandlers
 		{
 			var tetromino = _factory.Produce();
 			_container.SwitchTetromino(tetromino);
-			SpawnTetromino();
+			bool canSpawn = TrySpawnTetromino();
+
+			if (!canSpawn)
+				OntSwitchFailed?.Invoke();
+		}
+
+		private bool TrySpawnTetromino()
+		{
+			bool isValid = _grid.IsValidTetrominoPosition(
+				_container.CurrentTetromino,
+				_grid.SpawnPosition);
+
+			if (isValid)
+				SpawnTetromino();
+
+			return isValid;
 		}
 
 		private void SpawnTetromino()
