@@ -1,4 +1,5 @@
 using DataHandlers;
+using GameStates;
 using InputHandlers;
 using Presenters;
 using System;
@@ -18,7 +19,7 @@ namespace Core
 		[SerializeField] private Tile[] _tiles;
 
 		[SerializeField] private StartView _startView;
-
+		[SerializeField] private EndView _endView;
 
 		private readonly List<IDisposable> _disposableList = new();
 
@@ -28,16 +29,19 @@ namespace Core
 			TetrominoFactory tetrominoFactory = new(tetrominoRepository);
 			Container container = new(tetrominoFactory.Produce());
 
-			Control control = new(_grid, container);
+			Switcher switcher = new(_grid, container, tetrominoFactory);
+			GameState gameState = new(switcher);
+
+			Control control = new(_grid, container, gameState);
 			InputHandler input = new(control);
 
-			Switcher switcher = new(_grid, container, tetrominoFactory);
-
 			StartPresenter startPresenter = new(_startView, control, switcher, input);
+			EndPresenter endPresenter = new(_endView, switcher, input);
 
 			_disposableList.Add(input);
 			_disposableList.Add(switcher);
 			_disposableList.Add(startPresenter);
+			_disposableList.Add(endPresenter);
 		}
 
 		private void OnDisable()

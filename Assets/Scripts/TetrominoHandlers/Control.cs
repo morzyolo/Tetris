@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using GameStates;
 using TetrominoGridHandlers;
 using UnityEngine.InputSystem;
 
@@ -12,12 +13,12 @@ namespace TetrominoHandlers
 		private readonly PeriodicDownMover _periodicMover;
 		private readonly MoveDelayScaler _moveDelayScaler;
 
-		public Control(TetrominoGrid grid, Container container)
+		public Control(TetrominoGrid grid, Container container, GameState gameState)
 		{
 			Mover mover = new(grid, container);
 			_rotator = new(grid, container);
 			_horizontalMover = new(mover, container);
-			_periodicMover = new(grid, container, mover);
+			_periodicMover = new(grid, container, gameState,  mover); // TODO: dispose
 
 			_dropper = new(_periodicMover);
 			_moveDelayScaler = new(_periodicMover);

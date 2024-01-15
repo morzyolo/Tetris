@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using GameStates;
 using TetrominoGridHandlers;
 using UnityEngine;
 
@@ -8,16 +9,23 @@ namespace TetrominoHandlers
 	{
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
+		private readonly GameState _gameState;
 		private readonly Mover _mover;
 
 		private readonly float _defaultMoveDelay = 0.5f;
 		private float _currentMoveDelay;
 		private float _timeRemaining;
 
-		public PeriodicDownMover(TetrominoGrid grid, Container container, Mover mover)
+		public PeriodicDownMover(
+			TetrominoGrid grid,
+			Container container,
+			GameState gameState,
+			Mover mover
+		)
 		{
 			_grid = grid;
 			_container = container;
+			_gameState = gameState;
 			_mover = mover;
 
 			_currentMoveDelay = _defaultMoveDelay;
@@ -26,7 +34,7 @@ namespace TetrominoHandlers
 
 		public async UniTaskVoid Move()
 		{
-			while (true)
+			while (_gameState.IsPlaying)
 			{
 				await UniTask.Yield();
 
@@ -34,6 +42,10 @@ namespace TetrominoHandlers
 				while (canMove)
 				{
 					await UniTask.Yield(PlayerLoopTiming.Update);
+
+					if (!_gameState.IsPlaying)
+						break;
+
 					_timeRemaining -= Time.deltaTime;
 
 					if (_timeRemaining < 0)
@@ -49,7 +61,8 @@ namespace TetrominoHandlers
 					}
 				}
 
-				Lock();
+				if (_gameState.IsPlaying)
+					Lock();
 			}
 		}
 
