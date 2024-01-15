@@ -12,14 +12,14 @@ namespace Views
 		[SerializeField] private Button _playButton;
 		[SerializeField] private SeedInputField _inputField;
 
-		private void NotifyPlay() => OnPlayButtonPressed?.Invoke(_inputField.Seed);
-
 		public void Show() => SetActive(true);
 
 		public void Hide() => SetActive(false);
 
 		private void SetActive(bool isActive)
 			=> gameObject.SetActive(isActive);
+
+		private void NotifyPlay() => OnPlayButtonPressed?.Invoke(_inputField.Seed);
 
 		private void OnEnable()
 		{
