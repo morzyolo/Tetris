@@ -1,5 +1,5 @@
 using DataHandlers;
-using GameStates;
+using GameStateMachine;
 using InputHandlers;
 using Presenters;
 using System;
@@ -27,21 +27,25 @@ namespace Core
 		{
 			TetrominoRepository tetrominoRepository = new(_tiles);
 			TetrominoFactory tetrominoFactory = new(tetrominoRepository);
-			Container container = new(tetrominoFactory.Produce());
+			Container container = new();
 
-			Switcher switcher = new(_grid, container, tetrominoFactory);
-			GameState gameState = new(switcher);
+			StateMachine stateMachine = new();
 
-			Control control = new(_grid, container, gameState);
-			InputHandler input = new(control);
+			Control control = new(_grid, container, stateMachine);
+			InputHandler input = new(control, stateMachine);
 
-			StartPresenter startPresenter = new(_startView, control, switcher, input);
-			EndPresenter endPresenter = new(_endView, switcher, input);
+			StartPresenter startPresenter = new(_startView, stateMachine);
+			EndPresenter endPresenter = new(_endView, stateMachine);
+
+			Switcher switcher = new(_grid, container, tetrominoFactory, startPresenter, stateMachine);
 
 			_disposableList.Add(input);
+			_disposableList.Add(control);
 			_disposableList.Add(switcher);
 			_disposableList.Add(startPresenter);
 			_disposableList.Add(endPresenter);
+
+			stateMachine.Init();
 		}
 
 		private void OnDisable()
