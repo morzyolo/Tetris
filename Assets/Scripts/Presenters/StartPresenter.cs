@@ -1,6 +1,6 @@
-using InputHandlers;
+using GameStateMachine;
+using GameStateMachine.States;
 using System;
-using TetrominoHandlers;
 using Views;
 
 namespace Presenters
@@ -8,37 +8,38 @@ namespace Presenters
 	public sealed class StartPresenter : IDisposable
 	{
 		private readonly StartView _view;
-		private readonly Control _control;
-		private readonly Switcher _switcher;
-		private readonly InputHandler _input;
+		private readonly State _state;
 
-		public StartPresenter(
-			StartView view,
-			Control control,
-			Switcher switcher,
-			InputHandler input
-		)
+		public StartPresenter(StartView view, StateMachine stateMachine)
 		{
 			_view = view;
-			_switcher = switcher;
-			_control = control;
-			_input = input;
+			_state = stateMachine.ResolveState<StartGameState>();
 
-			_input.Disable();
+			_state.OnEntered += Enable;
+			_state.OnExited += Disable;
+		}
+
+		private void Enable()
+		{
+			_view.Show();
 			_view.OnPlayButtonPressed += StartGame;
+		}
+
+		private void Disable()
+		{
+			_view.OnPlayButtonPressed -= StartGame;
+			_view.Hide();
 		}
 
 		public void Dispose()
 		{
-			_view.OnPlayButtonPressed -= StartGame;
+			_state.OnEntered -= Enable;
+			_state.OnExited -= Disable;
 		}
 
 		private void StartGame(int seed)
 		{
-			_view.Hide();
-			_input.Enable();
-			_switcher.SpawnInitialTetromino(seed);
-			_ = _control.StartMove();
+			_state.GoToNext();
 		}
 	}
 }
