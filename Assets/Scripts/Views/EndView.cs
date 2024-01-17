@@ -8,7 +8,7 @@ namespace Views
 	{
 		public event Action OnRestartButtonPressed;
 
-		[SerializeField] private Button	_restartButton;
+		[SerializeField] private Button _restartButton;
 
 		public void Show() => SetActive(true);
 

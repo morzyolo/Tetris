@@ -18,7 +18,7 @@ namespace TetrominoHandlers
 			Mover mover = new(grid, container);
 			_rotator = new(grid, container);
 			_horizontalMover = new(mover, container);
-			_periodicMover = new(grid, container, gameState,  mover); // TODO: dispose
+			_periodicMover = new(grid, container, gameState, mover); // TODO: dispose
 
 			_dropper = new(_periodicMover);
 			_moveDelayScaler = new(_periodicMover);
