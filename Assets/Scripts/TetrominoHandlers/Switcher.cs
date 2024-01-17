@@ -1,49 +1,72 @@
-﻿using System;
+﻿using GameStateMachine;
+using GameStateMachine.States;
+using Presenters;
+using System;
 using TetrominoGridHandlers;
 
 namespace TetrominoHandlers
 {
 	public sealed class Switcher : IDisposable
 	{
-		public event Action OntSwitchFailed;
-
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
 		private readonly TetrominoFactory _factory;
+		private readonly StartPresenter _presenter;
+		private readonly State _state;
 
 		public Switcher(
 			TetrominoGrid grid,
 			Container container,
-			TetrominoFactory factory)
+			TetrominoFactory factory,
+			StartPresenter presenter,
+			StateMachine stateMachine
+		)
 		{
 			_grid = grid;
 			_container = container;
 			_factory = factory;
+			_presenter = presenter;
+			_state = stateMachine.ResolveState<InGameState>();
 
-			_container.OnLanded += SwitchTetromino;
+			_state.OnEntered += Enable;
+			_state.OnExited += Disable;
 		}
 
-		public void SpawnInitialTetromino(int seed)
+		public void Dispose()
 		{
-			_factory.ChangeSeed(seed);
+			_state.OnEntered -= Enable;
+			_state.OnExited -= Disable;
+		}
+
+		private void Enable()
+		{
+			_container.OnLanded += SwitchTetromino;
+
+			_factory.ChangeSeed(_presenter.Seed);
+			_container.SwitchTetromino(_factory.Produce());
 			SpawnTetromino();
+		}
+
+		private void Disable()
+		{
+			_container.OnLanded -= SwitchTetromino;
 		}
 
 		private void SwitchTetromino()
 		{
-			var tetromino = _factory.Produce();
-			_container.SwitchTetromino(tetromino);
+			_container.SwitchTetromino(_factory.Produce());
 			bool canSpawn = TrySpawnTetromino();
 
 			if (!canSpawn)
-				OntSwitchFailed?.Invoke();
+				_state.GoToNext();
 		}
 
 		private bool TrySpawnTetromino()
 		{
 			bool isValid = _grid.IsValidTetrominoPosition(
 				_container.CurrentTetromino,
-				_grid.SpawnPosition);
+				_grid.SpawnPosition
+			);
 
 			if (isValid)
 				SpawnTetromino();
@@ -55,11 +78,6 @@ namespace TetrominoHandlers
 		{
 			_container.CurrentTetromino.Position = _grid.SpawnPosition;
 			_grid.PlaceTetromino(_container.CurrentTetromino);
-		}
-
-		public void Dispose()
-		{
-			_container.OnLanded -= SwitchTetromino;
 		}
 	}
 }
