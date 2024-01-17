@@ -1,11 +1,12 @@
-﻿using Cysharp.Threading.Tasks;
-using GameStates;
+﻿using GameStateMachine;
+using GameStateMachine.States;
+using System;
 using TetrominoGridHandlers;
 using UnityEngine.InputSystem;
 
 namespace TetrominoHandlers
 {
-	public class Control
+	public sealed class Control : IDisposable
 	{
 		private readonly Rotator _rotator;
 		private readonly HardDropper _dropper;
@@ -13,15 +14,21 @@ namespace TetrominoHandlers
 		private readonly PeriodicDownMover _periodicMover;
 		private readonly MoveDelayScaler _moveDelayScaler;
 
-		public Control(TetrominoGrid grid, Container container, GameState gameState)
+		private readonly State _state;
+
+		public Control(TetrominoGrid grid, Container container, StateMachine stateMachine)
 		{
 			Mover mover = new(grid, container);
 			_rotator = new(grid, container);
 			_horizontalMover = new(mover, container);
-			_periodicMover = new(grid, container, gameState, mover); // TODO: dispose
+			_periodicMover = new(grid, container, mover);
 
 			_dropper = new(_periodicMover);
 			_moveDelayScaler = new(_periodicMover);
+
+			_state = stateMachine.ResolveState<InGameState>();
+			_state.OnEntered += Enable;
+			_state.OnExited += Disable;
 		}
 
 		public void Move(InputAction.CallbackContext context)
@@ -43,6 +50,23 @@ namespace TetrominoHandlers
 				_moveDelayScaler.SetDefaultDelay();
 		}
 
-		public UniTaskVoid StartMove() => _periodicMover.Move();
+		private void Enable()
+		{
+			_periodicMover.Start();
+		}
+
+		private void Disable()
+		{
+			_periodicMover.Stop();
+		}
+
+		public void Dispose()
+		{
+			_state.OnEntered -= Enable;
+			_state.OnExited -= Disable;
+
+			_periodicMover.Dispose();
+			GC.SuppressFinalize(this);
+		}
 	}
 }
