@@ -32,13 +32,14 @@ namespace TetrominoHandlers
 
 		public void Start()
 		{
+			_cancellationSource?.Dispose();
 			_cancellationSource = new();
 			_ = Move();
 		}
 
 		public void Stop()
 		{
-			Dispose();
+			_cancellationSource.Cancel();
 		}
 
 		public void ScaleMoveDelay(float scale)

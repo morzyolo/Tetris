@@ -14,9 +14,6 @@ namespace TetrominoHandlers
 		public Tetromino CurrentTetromino => _currentTetramino;
 		private Tetromino _currentTetramino;
 
-		public Container(Tetromino startTetromino)
-			=> SwitchTetromino(startTetromino);
-
 		public void SetTimeToLock() => TimeToLock = _defaultTimeToLock;
 
 		public void SwitchTetromino(Tetromino newTetromino)

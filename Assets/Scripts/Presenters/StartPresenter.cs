@@ -7,6 +7,8 @@ namespace Presenters
 {
 	public sealed class StartPresenter : IDisposable
 	{
+		public int Seed => _view.Seed;
+
 		private readonly StartView _view;
 		private readonly State _state;
 
@@ -15,6 +17,7 @@ namespace Presenters
 			_view = view;
 			_state = stateMachine.ResolveState<StartGameState>();
 
+			_view.Show();
 			_state.OnEntered += Enable;
 			_state.OnExited += Disable;
 		}
@@ -37,7 +40,7 @@ namespace Presenters
 			_state.OnExited -= Disable;
 		}
 
-		private void StartGame(int seed)
+		private void StartGame()
 		{
 			_state.GoToNext();
 		}

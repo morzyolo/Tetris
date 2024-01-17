@@ -7,7 +7,10 @@ namespace Views
 {
 	public class StartView : MonoBehaviour
 	{
-		public event Action<int> OnPlayButtonPressed;
+		public event Action OnPlayButtonPressed;
+
+		public int Seed => _inputField.Seed;
+
 
 		[SerializeField] private Button _playButton;
 		[SerializeField] private SeedInputField _inputField;
@@ -19,7 +22,7 @@ namespace Views
 		private void SetActive(bool isActive)
 			=> gameObject.SetActive(isActive);
 
-		private void NotifyPlay() => OnPlayButtonPressed?.Invoke(_inputField.Seed);
+		private void NotifyPlay() => OnPlayButtonPressed?.Invoke();
 
 		private void OnEnable()
 		{

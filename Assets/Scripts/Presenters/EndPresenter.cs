@@ -1,6 +1,7 @@
 ﻿using GameStateMachine;
 using GameStateMachine.States;
 using System;
+using UnityEngine.SceneManagement;
 using Views;
 
 namespace Presenters
@@ -14,6 +15,8 @@ namespace Presenters
 		{
 			_view = view;
 			_state = stateMachine.ResolveState<EndGameState>();
+
+			_view.Hide();
 			_state.OnEntered += Enable;
 			_state.OnExited += Disable;
 		}
@@ -38,7 +41,8 @@ namespace Presenters
 
 		private void RestartGame()
 		{
-			_state.GoToNext();
+			int sceneId = SceneManager.GetActiveScene().buildIndex;
+			SceneManager.LoadScene(sceneId);
 		}
 	}
 }
