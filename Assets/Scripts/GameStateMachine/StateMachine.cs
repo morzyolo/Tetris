@@ -19,6 +19,9 @@ namespace GameStateMachine
 				{ typeof(EndGameState), new EndGameState(this) }
 			};
 
+			foreach (var state in _states.Values)
+				state.SetNextState();
+
 			_currentState = _states[typeof(StartGameState)];
 		}
 

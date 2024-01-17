@@ -2,12 +2,13 @@ namespace GameStateMachine.States
 {
 	public sealed class InGameState : State
 	{
-		private readonly State _nextState;
+		private State _nextState;
 
-		public InGameState(StateMachine stateMachine) : base(stateMachine)
-		{
-			_nextState = stateMachine.ResolveState<EndGameState>();
-		}
+		public InGameState(StateMachine stateMachine)
+			: base(stateMachine) { }
+
+		public override void SetNextState()
+			=> _nextState = StateMachine.ResolveState<EndGameState>();
 
 		public override void GoToNext()
 		{

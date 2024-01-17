@@ -24,6 +24,7 @@ namespace GameStateMachine.States
 			OnExited.Invoke();
 		}
 
+		public abstract void SetNextState();
 		public abstract void GoToNext();
 	}
 }
