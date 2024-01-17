@@ -1,7 +1,6 @@
-﻿using InputHandlers;
+﻿using GameStateMachine;
+using GameStateMachine.States;
 using System;
-using TetrominoHandlers;
-using UnityEngine.SceneManagement;
 using Views;
 
 namespace Presenters
@@ -9,40 +8,37 @@ namespace Presenters
 	public sealed class EndPresenter : IDisposable
 	{
 		private readonly EndView _view;
-		private readonly InputHandler _input;
-		private readonly Switcher _switcher;
+		private readonly State _state;
 
-		public EndPresenter(
-			EndView view,
-			Switcher switcher,
-			InputHandler input
-		)
+		public EndPresenter(EndView view, StateMachine stateMachine)
 		{
 			_view = view;
-			_input = input;
-			_switcher = switcher;
+			_state = stateMachine.ResolveState<EndGameState>();
+			_state.OnEntered += Enable;
+			_state.OnExited += Disable;
+		}
 
-			_view.Hide();
-			_switcher.OntSwitchFailed += Show;
+		private void Enable()
+		{
+			_view.Show();
 			_view.OnRestartButtonPressed += RestartGame;
+		}
+
+		private void Disable()
+		{
+			_view.OnRestartButtonPressed -= RestartGame;
+			_view.Hide();
 		}
 
 		public void Dispose()
 		{
-			_switcher.OntSwitchFailed -= Show;
-			_view.OnRestartButtonPressed -= RestartGame;
-		}
-
-		private void Show()
-		{
-			_input.Disable();
-			_view.Show();
+			_state.OnEntered -= Enable;
+			_state.OnExited -= Disable;
 		}
 
 		private void RestartGame()
 		{
-			int sceneId = SceneManager.GetActiveScene().buildIndex;
-			SceneManager.LoadScene(sceneId);
+			_state.GoToNext();
 		}
 	}
 }
