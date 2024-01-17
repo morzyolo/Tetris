@@ -1,3 +1,5 @@
+using GameStateMachine;
+using GameStateMachine.States;
 using System;
 using TetrominoHandlers;
 
@@ -5,25 +7,37 @@ namespace InputHandlers
 {
 	public sealed class InputHandler : IDisposable
 	{
-		private readonly Control _control;
 		private readonly InputMap _input;
+		private readonly Control _control;
+		private readonly State _state;
 
-		public InputHandler(Control control)
+		public InputHandler(Control control, StateMachine stateMachine)
 		{
-			_input = new InputMap();
-			Enable();
-
+			_input = new();
 			_control = control;
-			Sub();
+			_state = stateMachine.ResolveState<InGameState>();
+
+			_state.OnEntered += Enable;
+			_state.OnExited += Disable;
 		}
 
-		public void Enable() => _input.Enable();
+		public void Enable()
+		{
+			Sub();
+			_input.Enable();
+		}
 
-		public void Disable() => _input.Disable();
+		public void Disable()
+		{
+			Unsub();
+			_input.Disable();
+		}
 
 		public void Dispose()
 		{
-			Unsub();
+			_state.OnEntered -= Enable;
+			_state.OnExited -= Disable;
+
 			Disable();
 			_input.Dispose();
 		}
