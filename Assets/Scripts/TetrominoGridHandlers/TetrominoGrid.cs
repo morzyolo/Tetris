@@ -26,7 +26,7 @@ namespace TetrominoGridHandlers
 			_rowCleaner = new(this, _tilemap);
 		}
 
-		public void ClearRows(int minRow, int maxRow) => _rowCleaner.ClearRows(minRow, maxRow);
+		public void ClearRows(Tetromino tetromino) => _rowCleaner.ClearRows(tetromino);
 
 		public void PlaceTetromino(Tetromino tetromino)
 			=> PlaceTetrominoTiles(tetromino, tetromino.Data.Tile);

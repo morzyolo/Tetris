@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using Tetrominoes;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace TetrominoGridHandlers
@@ -14,8 +16,10 @@ namespace TetrominoGridHandlers
 			_tilemap = tilemap;
 		}
 
-		public void ClearRows(int minRow, int maxRow)
+		public void ClearRows(Tetromino tetromino)
 		{
+			(int minRow, int maxRow) = GetTetrominoRowBoundary(tetromino);
+
 			if (minRow > maxRow)
 				return;
 
@@ -32,6 +36,15 @@ namespace TetrominoGridHandlers
 					for (int x = gridBoundary.xMin; x < gridBoundary.xMax; x++)
 						_tilemap.SetTile(new(x, y), null);
 			}
+		}
+
+		private (int min, int max) GetTetrominoRowBoundary(Tetromino tetromino)
+		{
+			var cells = tetromino.Data.Cells;
+			int minPosition = cells.Min(cell => cell.y);
+			int maxPosition = cells.Max(cell => cell.y);
+
+			return (minPosition + tetromino.Position.y, maxPosition + tetromino.Position.y);
 		}
 
 		private void CheckRows(int from, int to, RectInt boundary, ref int rowShift)
