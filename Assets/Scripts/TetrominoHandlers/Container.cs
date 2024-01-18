@@ -5,7 +5,7 @@ namespace TetrominoHandlers
 {
 	public class Container
 	{
-		public event Action OnLanded;
+		public event Action<Tetromino> OnLanded;
 
 		public float TimeToLock { get; set; } = 0f;
 
@@ -14,14 +14,11 @@ namespace TetrominoHandlers
 		public Tetromino CurrentTetromino => _currentTetramino;
 		private Tetromino _currentTetramino;
 
-		public Container(Tetromino startTetromino)
-			=> SwitchTetromino(startTetromino);
-
 		public void SetTimeToLock() => TimeToLock = _defaultTimeToLock;
 
 		public void SwitchTetromino(Tetromino newTetromino)
 			=> _currentTetramino = newTetromino;
 
-		public void Land() => OnLanded?.Invoke();
+		public void Land() => OnLanded?.Invoke(_currentTetramino);
 	}
 }

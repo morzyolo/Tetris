@@ -1,18 +1,23 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Threading;
 using TetrominoGridHandlers;
 using UnityEngine;
 
 namespace TetrominoHandlers
 {
-	public class PeriodicDownMover
+	public sealed class PeriodicDownMover : IDisposable
 	{
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
 		private readonly Mover _mover;
 
 		private readonly float _defaultMoveDelay = 0.5f;
+
 		private float _currentMoveDelay;
 		private float _timeRemaining;
+
+		private CancellationTokenSource _cancellationSource;
 
 		public PeriodicDownMover(TetrominoGrid grid, Container container, Mover mover)
 		{
@@ -22,18 +27,61 @@ namespace TetrominoHandlers
 
 			_currentMoveDelay = _defaultMoveDelay;
 			_timeRemaining = _currentMoveDelay;
+			Dispose();
 		}
 
-		public async UniTaskVoid Move()
+		public void Start()
 		{
-			while (true)
+			_cancellationSource?.Dispose();
+			_cancellationSource = new();
+			_ = Move();
+		}
+
+		public void Stop()
+		{
+			_cancellationSource.Cancel();
+		}
+
+		public void ScaleMoveDelay(float scale)
+		{
+			float newMoveDelay = _defaultMoveDelay * scale;
+			_timeRemaining = Mathf.Lerp(0, newMoveDelay, _timeRemaining / _currentMoveDelay);
+			_currentMoveDelay = newMoveDelay;
+		}
+
+		public bool TryMoveDown()
+		{
+			_timeRemaining = _currentMoveDelay;
+			return _mover.TryTranslateTetromino(Vector2Int.down);
+		}
+
+		public void Lock()
+		{
+			_grid.ClearRows(_container.CurrentTetromino);
+			_container.Land();
+		}
+
+		public void Dispose()
+		{
+			_cancellationSource?.Cancel();
+			_cancellationSource?.Dispose();
+		}
+
+		private async UniTaskVoid Move()
+		{
+			_timeRemaining = _currentMoveDelay;
+
+			while (!_cancellationSource.IsCancellationRequested)
 			{
 				await UniTask.Yield();
 
 				bool canMove = true;
 				while (canMove)
 				{
-					await UniTask.Yield(PlayerLoopTiming.Update);
+					await UniTask.Yield(PlayerLoopTiming.Update, _cancellationSource.Token);
+					if (_cancellationSource.IsCancellationRequested)
+						return;
+
 					_timeRemaining -= Time.deltaTime;
 
 					if (_timeRemaining < 0)
@@ -51,43 +99,6 @@ namespace TetrominoHandlers
 
 				Lock();
 			}
-		}
-
-		public bool TryMoveDown()
-		{
-			_timeRemaining = _currentMoveDelay;
-			return _mover.TryTranslateTetromino(Vector2Int.down);
-		}
-
-		public void ScaleMoveDelay(float scale)
-		{
-			float newMoveDelay = _defaultMoveDelay * scale;
-			_timeRemaining = Mathf.Lerp(0, newMoveDelay, _timeRemaining / _currentMoveDelay);
-			_currentMoveDelay = newMoveDelay;
-		}
-
-		public void Lock()
-		{
-			(int min, int max) = GetTetrominoRowBoundary();
-			_grid.ClearRows(min, max);
-			_container.Land();
-		}
-
-		private (int min, int max) GetTetrominoRowBoundary()
-		{
-			var cells = _container.CurrentTetromino.Data.Cells;
-
-			int minPosition = int.MaxValue;
-			int maxPosition = int.MinValue;
-
-			foreach (var cell in cells)
-			{
-				minPosition = Mathf.Min(minPosition, cell.y);
-				maxPosition = Mathf.Max(maxPosition, cell.y);
-			}
-
-			return (minPosition + _container.CurrentTetromino.Position.y,
-				maxPosition + _container.CurrentTetromino.Position.y);
 		}
 	}
 }
