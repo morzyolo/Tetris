@@ -1,6 +1,9 @@
+using Changers;
+using Controllers;
 using DataHandlers;
 using GameStateMachine;
 using InputHandlers;
+using Models;
 using Presenters;
 using System;
 using System.Collections.Generic;
@@ -19,6 +22,7 @@ namespace Core
 		[SerializeField] private Tile[] _tiles;
 
 		[SerializeField] private StartView _startView;
+		[SerializeField] private ScoreView _scoreView;
 		[SerializeField] private EndView _endView;
 
 		private readonly List<IDisposable> _disposableList = new();
@@ -31,10 +35,15 @@ namespace Core
 
 			StateMachine stateMachine = new();
 
+			_grid.Init();
 			Control control = new(_grid, container, stateMachine);
 			InputHandler input = new(control, stateMachine);
 
+			Score score = new();
+			ScoreChanger scoreChanger = new(_grid, container, score);
+
 			StartPresenter startPresenter = new(_startView, stateMachine);
+			ScoreController scoreController = new(_scoreView, score, stateMachine);
 			EndPresenter endPresenter = new(_endView, stateMachine);
 
 			Switcher switcher = new(_grid, container, tetrominoFactory, startPresenter, stateMachine);
@@ -42,7 +51,9 @@ namespace Core
 			_disposableList.Add(input);
 			_disposableList.Add(control);
 			_disposableList.Add(switcher);
+			_disposableList.Add(scoreChanger);
 			_disposableList.Add(startPresenter);
+			_disposableList.Add(scoreController);
 			_disposableList.Add(endPresenter);
 
 			stateMachine.Init();
