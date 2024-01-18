@@ -1,3 +1,4 @@
+using System;
 using Tetrominoes;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -6,6 +7,12 @@ namespace TetrominoGridHandlers
 {
 	public class TetrominoGrid : MonoBehaviour
 	{
+		public event Action OnRowCleared
+		{
+			add => _rowCleaner.OnRowCleared += value;
+			remove => _rowCleaner.OnRowCleared -= value;
+		}
+
 		public RectInt GridBoundary => _gridBoundary;
 		public Vector2Int SpawnPosition => _spawnPosition;
 
@@ -22,6 +29,10 @@ namespace TetrominoGridHandlers
 		private void Awake()
 		{
 			_gridSetup.ResizeGrid(_gridSize);
+		}
+
+		public void Init()
+		{
 			_gridBoundary = new(0, 0, _gridSize.x, _gridSize.y);
 			_rowCleaner = new(this, _tilemap);
 		}

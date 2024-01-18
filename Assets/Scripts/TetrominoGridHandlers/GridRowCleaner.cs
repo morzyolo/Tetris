@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Tetrominoes;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -7,6 +8,8 @@ namespace TetrominoGridHandlers
 {
 	internal class GridRowCleaner
 	{
+		public event Action OnRowCleared;
+
 		private readonly TetrominoGrid _grid;
 		private readonly Tilemap _tilemap;
 
@@ -54,9 +57,14 @@ namespace TetrominoGridHandlers
 			while (row <= to)
 			{
 				if (IsLineFull(row, boundary))
+				{
 					rowShift++;
+					OnRowCleared?.Invoke();
+				}
 				else
+				{
 					ShiftRows(row, row, rowShift, boundary);
+				}
 
 				row++;
 			}
