@@ -2,6 +2,7 @@
 using GameStateMachine.States;
 using Presenters;
 using System;
+using Tetrominoes;
 using TetrominoGridHandlers;
 
 namespace TetrominoHandlers
@@ -52,7 +53,7 @@ namespace TetrominoHandlers
 			_container.OnLanded -= SwitchTetromino;
 		}
 
-		private void SwitchTetromino()
+		private void SwitchTetromino(Tetromino _)
 		{
 			_container.SwitchTetromino(_factory.Produce());
 			bool canSpawn = TrySpawnTetromino();
