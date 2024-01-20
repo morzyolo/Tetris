@@ -37,8 +37,8 @@ namespace TetrominoHandlers
 		public void Rotate(InputAction.CallbackContext context)
 			=> _rotator.Rotate(context.ReadValue<float>());
 
-		public void HardDrop(InputAction.CallbackContext context)
-			=> _ = _dropper.Drop();
+		public void HardDrop(InputAction.CallbackContext _)
+			=> _dropper.Drop().Forget();
 
 		public void MoveDown(InputAction.CallbackContext context)
 		{
