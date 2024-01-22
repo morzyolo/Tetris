@@ -1,21 +1,22 @@
-﻿namespace TetrominoHandlers
+﻿using Configs;
+
+namespace TetrominoHandlers
 {
 	public class MoveDelayMultiplier
 	{
-		private readonly float _defaultDelayScale = 1f;
-		private readonly float _acceleratedDelayScale = 0.2f;
-
 		private readonly PeriodicDownMover _mover;
+		private readonly TetrominoMovementConfig _config;
 
-		public MoveDelayMultiplier(PeriodicDownMover mover)
+		public MoveDelayMultiplier(PeriodicDownMover mover, TetrominoMovementConfig config)
 		{
 			_mover = mover;
+			_config = config;
 		}
 
 		public void SetDefaultDelay()
-			=> _mover.ScaleMoveDelay(_defaultDelayScale);
+			=> _mover.ScaleMoveDelay(_config.DefaultMoveDelayMultiplier);
 
 		public void SetAcceleratedDelay()
-			=> _mover.ScaleMoveDelay(_acceleratedDelayScale);
+			=> _mover.ScaleMoveDelay(_config.AcceleratedDelayMultiplier);
 	}
 }

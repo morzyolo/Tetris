@@ -1,4 +1,5 @@
-﻿using GameStateMachine;
+﻿using Configs;
+using GameStateMachine;
 using GameStateMachine.States;
 using System;
 using TetrominoGridHandlers;
@@ -16,15 +17,19 @@ namespace TetrominoHandlers
 
 		private readonly State _state;
 
-		public Control(TetrominoGrid grid, Container container, StateMachine stateMachine)
+		public Control(
+			TetrominoGrid grid,
+			Container container,
+			StateMachine stateMachine,
+			TetrominoMovementConfig config)
 		{
 			Mover mover = new(grid, container);
 			_rotator = new(grid, container);
 			_horizontalMover = new(mover, container);
-			_periodicMover = new(grid, container, mover);
+			_periodicMover = new(mover, grid, container, config);
 
 			_dropper = new(_periodicMover);
-			_moveDelayMultiplier = new(_periodicMover);
+			_moveDelayMultiplier = new(_periodicMover, config);
 
 			_state = stateMachine.ResolveState<InGameState>();
 			_state.OnEntered += Enable;

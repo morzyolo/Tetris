@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Configs;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
 using TetrominoGridHandlers;
@@ -11,21 +12,25 @@ namespace TetrominoHandlers
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
 		private readonly Mover _mover;
-
-		private readonly float _defaultMoveDelay = 0.5f;
+		private readonly TetrominoMovementConfig _config;
 
 		private float _currentMoveDelay;
 		private float _timeRemaining;
 
 		private CancellationTokenSource _cancellationSource;
 
-		public PeriodicDownMover(TetrominoGrid grid, Container container, Mover mover)
+		public PeriodicDownMover(
+			Mover mover,
+			TetrominoGrid grid,
+			Container container,
+			TetrominoMovementConfig config)
 		{
 			_grid = grid;
 			_container = container;
 			_mover = mover;
+			_config = config;
 
-			_currentMoveDelay = _defaultMoveDelay;
+			_currentMoveDelay = _config.DefaultMoveDelay;
 			_timeRemaining = _currentMoveDelay;
 			Dispose();
 		}
@@ -34,7 +39,7 @@ namespace TetrominoHandlers
 		{
 			_cancellationSource?.Dispose();
 			_cancellationSource = new();
-			_ = Move();
+			Move().Forget();
 		}
 
 		public void Stop()
@@ -44,7 +49,7 @@ namespace TetrominoHandlers
 
 		public void ScaleMoveDelay(float scale)
 		{
-			float newMoveDelay = _defaultMoveDelay * scale;
+			float newMoveDelay = _config.DefaultMoveDelay * scale;
 			_timeRemaining = Mathf.Lerp(0, newMoveDelay, _timeRemaining / _currentMoveDelay);
 			_currentMoveDelay = newMoveDelay;
 		}
@@ -69,13 +74,13 @@ namespace TetrominoHandlers
 
 		private async UniTaskVoid Move()
 		{
-			_timeRemaining = _currentMoveDelay;
-
 			while (!_cancellationSource.IsCancellationRequested)
 			{
 				await UniTask.Yield();
 
+				_timeRemaining = _currentMoveDelay;
 				bool canMove = true;
+
 				while (canMove)
 				{
 					await UniTask.Yield(PlayerLoopTiming.Update, _cancellationSource.Token);

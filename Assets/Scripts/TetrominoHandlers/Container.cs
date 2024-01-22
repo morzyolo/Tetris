@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Configs;
+using System;
 using Tetrominoes;
 
 namespace TetrominoHandlers
@@ -9,12 +10,17 @@ namespace TetrominoHandlers
 
 		public float TimeToLock { get; set; } = 0f;
 
-		private readonly float _defaultTimeToLock = 0.2f;
+		private readonly TetrominoMovementConfig _config;
+
+		public Container(TetrominoMovementConfig config)
+		{
+			_config = config;
+		}
 
 		public Tetromino CurrentTetromino => _currentTetramino;
 		private Tetromino _currentTetramino;
 
-		public void SetTimeToLock() => TimeToLock = _defaultTimeToLock;
+		public void SetTimeToLock() => TimeToLock = _config.TimeToLock;
 
 		public void SwitchTetromino(Tetromino newTetromino)
 			=> _currentTetramino = newTetromino;

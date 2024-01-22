@@ -833,6 +833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636ee70fb98f3344197f521f6b2064fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tetrominoMovementConfig: {fileID: 11400000, guid: cf04c3e9b5412694ea1869c650796a6e, type: 2}
   _grid: {fileID: 664560605}
   _tiles:
   - {fileID: 11400000, guid: de6ec26444c12034fb7b962763e9a64a, type: 2}
