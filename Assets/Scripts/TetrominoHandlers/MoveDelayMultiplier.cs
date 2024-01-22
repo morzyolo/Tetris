@@ -1,13 +1,13 @@
 ﻿namespace TetrominoHandlers
 {
-	public class MoveDelayScaler
+	public class MoveDelayMultiplier
 	{
 		private readonly float _defaultDelayScale = 1f;
 		private readonly float _acceleratedDelayScale = 0.2f;
 
 		private readonly PeriodicDownMover _mover;
 
-		public MoveDelayScaler(PeriodicDownMover mover)
+		public MoveDelayMultiplier(PeriodicDownMover mover)
 		{
 			_mover = mover;
 		}

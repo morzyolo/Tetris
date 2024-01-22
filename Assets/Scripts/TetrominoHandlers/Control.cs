@@ -12,7 +12,7 @@ namespace TetrominoHandlers
 		private readonly HardDropper _dropper;
 		private readonly HorizontalMover _horizontalMover;
 		private readonly PeriodicDownMover _periodicMover;
-		private readonly MoveDelayScaler _moveDelayScaler;
+		private readonly MoveDelayMultiplier _moveDelayMultiplier;
 
 		private readonly State _state;
 
@@ -24,7 +24,7 @@ namespace TetrominoHandlers
 			_periodicMover = new(grid, container, mover);
 
 			_dropper = new(_periodicMover);
-			_moveDelayScaler = new(_periodicMover);
+			_moveDelayMultiplier = new(_periodicMover);
 
 			_state = stateMachine.ResolveState<InGameState>();
 			_state.OnEntered += Enable;
@@ -45,9 +45,9 @@ namespace TetrominoHandlers
 			bool isStarted = context.ReadValueAsButton();
 
 			if (isStarted)
-				_moveDelayScaler.SetAcceleratedDelay();
+				_moveDelayMultiplier.SetAcceleratedDelay();
 			else
-				_moveDelayScaler.SetDefaultDelay();
+				_moveDelayMultiplier.SetDefaultDelay();
 		}
 
 		private void Enable()
