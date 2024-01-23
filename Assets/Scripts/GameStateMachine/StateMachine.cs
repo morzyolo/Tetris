@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using GameStateMachine.States;
 using System;
 using System.Collections.Generic;
@@ -39,9 +40,9 @@ namespace GameStateMachine
 			throw new KeyNotFoundException("State not found");
 		}
 
-		public void ChangeState(State currentState, State nextState)
+		public async UniTaskVoid ChangeState(State currentState, State nextState)
 		{
-			currentState.Exit();
+			await currentState.Exit();
 			_currentState = nextState;
 			_currentState.Enter();
 		}

@@ -12,7 +12,7 @@ namespace GameStateMachine.States
 
 		public override void GoToNext()
 		{
-			StateMachine.ChangeState(this, _nextState);
+			StateMachine.ChangeState(this, _nextState).Forget();
 		}
 	}
 }

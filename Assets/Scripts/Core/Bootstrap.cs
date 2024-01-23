@@ -1,4 +1,5 @@
 using Changers;
+using Configs;
 using Controllers;
 using DataHandlers;
 using GameStateMachine;
@@ -17,6 +18,8 @@ namespace Core
 {
 	public class Bootstrap : MonoBehaviour
 	{
+		[SerializeField] private TetrominoMovementConfig _tetrominoMovementConfig;
+
 		[SerializeField] private TetrominoGrid _grid;
 
 		[SerializeField] private Tile[] _tiles;
@@ -31,12 +34,12 @@ namespace Core
 		{
 			TetrominoRepository tetrominoRepository = new(_tiles);
 			TetrominoFactory tetrominoFactory = new(tetrominoRepository);
-			Container container = new();
+			Container container = new(_tetrominoMovementConfig);
 
 			StateMachine stateMachine = new();
 
 			_grid.Init();
-			Control control = new(_grid, container, stateMachine);
+			Control control = new(_grid, container, stateMachine, _tetrominoMovementConfig);
 			InputHandler input = new(control, stateMachine);
 
 			Score score = new();
@@ -44,9 +47,10 @@ namespace Core
 
 			StartPresenter startPresenter = new(_startView, stateMachine);
 			ScoreController scoreController = new(_scoreView, score, stateMachine);
-			EndPresenter endPresenter = new(_endView, stateMachine);
+			EndPresenter endPresenter = new(_endView, score, stateMachine);
 
-			Switcher switcher = new(_grid, container, tetrominoFactory, startPresenter, stateMachine);
+			Spawner spawner = new(_grid);
+			Switcher switcher = new(spawner, _grid, container, tetrominoFactory, startPresenter, stateMachine);
 
 			_disposableList.Add(input);
 			_disposableList.Add(control);

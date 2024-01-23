@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using Extensions;
+using System;
 using Tetrominoes;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -42,13 +42,8 @@ namespace TetrominoGridHandlers
 		}
 
 		private (int min, int max) GetTetrominoRowBoundary(Tetromino tetromino)
-		{
-			var cells = tetromino.Data.Cells;
-			int minPosition = cells.Min(cell => cell.y);
-			int maxPosition = cells.Max(cell => cell.y);
-
-			return (minPosition + tetromino.Position.y, maxPosition + tetromino.Position.y);
-		}
+			=> (tetromino.MinCellsY() + tetromino.Position.y,
+				tetromino.MaxCellsY() + tetromino.Position.y);
 
 		private void CheckRows(int from, int to, RectInt boundary, ref int rowShift)
 		{
