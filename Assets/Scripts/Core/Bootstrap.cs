@@ -47,7 +47,7 @@ namespace Core
 
 			StartPresenter startPresenter = new(_startView, stateMachine);
 			ScoreController scoreController = new(_scoreView, score, stateMachine);
-			EndPresenter endPresenter = new(_endView, stateMachine);
+			EndPresenter endPresenter = new(_endView, score, stateMachine);
 
 			Switcher switcher = new(_grid, container, tetrominoFactory, startPresenter, stateMachine);
 

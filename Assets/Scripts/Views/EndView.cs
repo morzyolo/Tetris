@@ -8,11 +8,15 @@ namespace Views
 	{
 		public event Action OnRestartButtonPressed;
 
+		[SerializeField] private ScoreView _scoreView;
 		[SerializeField] private Button _restartButton;
 
 		public void Show() => SetActive(true);
 
 		public void Hide() => SetActive(false);
+
+		public void SetScore(int score)
+			=> _scoreView.UpdateScore(score);
 
 		private void SetActive(bool isActive)
 			=> gameObject.SetActive(isActive);
