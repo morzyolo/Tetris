@@ -9,6 +9,7 @@ namespace Configs
 	public class TetrominoMovementConfig : ScriptableObject
 	{
 		public float DefaultMoveDelay => _defaultMoveDelay;
+		public float DelayBetweenHorizontalMove => _delayBetweenHorizontalMove;
 		public float TimeToLock => _timeToLock;
 
 		public float DefaultMoveDelayMultiplier => _defaultMoveDelayMultiplier;
@@ -16,6 +17,7 @@ namespace Configs
 
 		[Header("Movement Values")]
 		[SerializeField] private float _defaultMoveDelay = 0.45f;
+		[SerializeField] private float _delayBetweenHorizontalMove = 0.1f;
 		[SerializeField] private float _timeToLock = 0.1f;
 
 		[Header("Multipliers")]

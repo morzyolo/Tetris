@@ -25,7 +25,7 @@ namespace TetrominoHandlers
 		{
 			Mover mover = new(grid, container);
 			_rotator = new(grid, container);
-			_horizontalMover = new(mover, container);
+			_horizontalMover = new(mover, container, config);
 			_periodicMover = new(mover, grid, container, config);
 
 			_dropper = new(_periodicMover);
@@ -37,7 +37,13 @@ namespace TetrominoHandlers
 		}
 
 		public void Move(InputAction.CallbackContext context)
-			=> _horizontalMover.Move(context.ReadValue<float>());
+		{
+			if (context.started)
+				_horizontalMover.Start(context.ReadValue<float>());
+
+			if (context.canceled)
+				_horizontalMover.Stop();
+		}
 
 		public void Rotate(InputAction.CallbackContext context)
 			=> _rotator.Rotate(context.ReadValue<float>());
@@ -71,6 +77,7 @@ namespace TetrominoHandlers
 			_state.OnExited -= Disable;
 
 			_periodicMover.Dispose();
+			_horizontalMover.Dispose();
 			GC.SuppressFinalize(this);
 		}
 	}

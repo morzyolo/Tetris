@@ -45,6 +45,7 @@ namespace InputHandlers
 		private void Sub()
 		{
 			_input.TetrominoControl.Moved.started += _control.Move;
+			_input.TetrominoControl.Moved.canceled += _control.Move;
 			_input.TetrominoControl.Rotated.started += _control.Rotate;
 			_input.TetrominoControl.HardDrop.started += _control.HardDrop;
 			_input.TetrominoControl.DownMove.started += _control.MoveDown;
@@ -54,6 +55,7 @@ namespace InputHandlers
 		private void Unsub()
 		{
 			_input.TetrominoControl.Moved.started -= _control.Move;
+			_input.TetrominoControl.Moved.canceled -= _control.Move;
 			_input.TetrominoControl.Rotated.started -= _control.Rotate;
 			_input.TetrominoControl.HardDrop.started -= _control.HardDrop;
 			_input.TetrominoControl.DownMove.started -= _control.MoveDown;
