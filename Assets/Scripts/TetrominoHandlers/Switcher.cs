@@ -1,9 +1,11 @@
-﻿using GameStateMachine;
+﻿using Extensions;
+using GameStateMachine;
 using GameStateMachine.States;
 using Presenters;
 using System;
 using Tetrominoes;
 using TetrominoGridHandlers;
+using UnityEngine;
 
 namespace TetrominoHandlers
 {
@@ -44,7 +46,6 @@ namespace TetrominoHandlers
 			_container.OnLanded += SwitchTetromino;
 
 			_factory.ChangeSeed(_presenter.Seed);
-			_container.SwitchTetromino(_factory.Produce());
 			SpawnTetromino();
 		}
 
@@ -53,32 +54,33 @@ namespace TetrominoHandlers
 			_container.OnLanded -= SwitchTetromino;
 		}
 
-		private void SwitchTetromino(Tetromino _)
+		private void SwitchTetromino(Tetromino tetromino)
 		{
-			_container.SwitchTetromino(_factory.Produce());
-			bool canSpawn = TrySpawnTetromino();
-
-			if (!canSpawn)
+			if (_grid.HasTilesInLimitArea())
+			{
 				_state.GoToNext();
-		}
+				return;
+			}
 
-		private bool TrySpawnTetromino()
-		{
-			bool isValid = _grid.IsValidTetrominoPosition(
-				_container.CurrentTetromino,
-				_grid.SpawnPosition
-			);
-
-			if (isValid)
-				SpawnTetromino();
-
-			return isValid;
+			SpawnTetromino();
 		}
 
 		private void SpawnTetromino()
 		{
-			_container.CurrentTetromino.Position = _grid.SpawnPosition;
+			Tetromino newTetromino = _factory.Produce();
+			_container.SwitchTetromino(newTetromino);
+
+			Vector2Int spawnPosition = GetSpawnTetrominoPosition();
+			_container.CurrentTetromino.Position = spawnPosition;
 			_grid.PlaceTetromino(_container.CurrentTetromino);
+		}
+
+		private Vector2Int GetSpawnTetrominoPosition()
+		{
+			int tetrominoHeight = _container.CurrentTetromino.Height();
+			return new(
+				_grid.GridBoundary.width / 2,
+				_grid.GridBoundary.height + tetrominoHeight / 2);
 		}
 	}
 }
