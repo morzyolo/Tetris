@@ -11,6 +11,7 @@ namespace TetrominoHandlers
 {
 	public sealed class Switcher : IDisposable
 	{
+		private readonly Spawner _spawner;
 		private readonly TetrominoGrid _grid;
 		private readonly Container _container;
 		private readonly TetrominoFactory _factory;
@@ -18,13 +19,14 @@ namespace TetrominoHandlers
 		private readonly State _state;
 
 		public Switcher(
+			Spawner spawner,
 			TetrominoGrid grid,
 			Container container,
 			TetrominoFactory factory,
 			StartPresenter presenter,
-			StateMachine stateMachine
-		)
+			StateMachine stateMachine)
 		{
+			_spawner = spawner;
 			_grid = grid;
 			_container = container;
 			_factory = factory;
@@ -43,18 +45,18 @@ namespace TetrominoHandlers
 
 		private void Enable()
 		{
-			_container.OnLanded += SwitchTetromino;
+			_container.OnLanded += Handle;
 
 			_factory.ChangeSeed(_presenter.Seed);
-			SpawnTetromino();
+			Switch();
 		}
 
 		private void Disable()
 		{
-			_container.OnLanded -= SwitchTetromino;
+			_container.OnLanded -= Handle;
 		}
 
-		private void SwitchTetromino(Tetromino tetromino)
+		private void Handle(Tetromino tetromino)
 		{
 			if (_grid.HasTilesInLimitArea())
 			{
@@ -62,25 +64,14 @@ namespace TetrominoHandlers
 				return;
 			}
 
-			SpawnTetromino();
+			Switch();
 		}
 
-		private void SpawnTetromino()
+		private void Switch()
 		{
 			Tetromino newTetromino = _factory.Produce();
 			_container.SwitchTetromino(newTetromino);
-
-			Vector2Int spawnPosition = GetSpawnTetrominoPosition();
-			_container.CurrentTetromino.Position = spawnPosition;
-			_grid.PlaceTetromino(_container.CurrentTetromino);
-		}
-
-		private Vector2Int GetSpawnTetrominoPosition()
-		{
-			int tetrominoHeight = _container.CurrentTetromino.Height();
-			return new(
-				_grid.GridBoundary.width / 2,
-				_grid.GridBoundary.height + tetrominoHeight / 2);
+			_spawner.Spawn(newTetromino);
 		}
 	}
 }

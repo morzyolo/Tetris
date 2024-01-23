@@ -49,7 +49,8 @@ namespace Core
 			ScoreController scoreController = new(_scoreView, score, stateMachine);
 			EndPresenter endPresenter = new(_endView, score, stateMachine);
 
-			Switcher switcher = new(_grid, container, tetrominoFactory, startPresenter, stateMachine);
+			Spawner spawner = new(_grid);
+			Switcher switcher = new(spawner, _grid, container, tetrominoFactory, startPresenter, stateMachine);
 
 			_disposableList.Add(input);
 			_disposableList.Add(control);
