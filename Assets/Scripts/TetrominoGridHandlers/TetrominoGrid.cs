@@ -25,13 +25,9 @@ namespace TetrominoGridHandlers
 		private RectInt _gridBoundary;
 		private GridRowCleaner _rowCleaner;
 
-		private void Awake()
-		{
-			_gridSetup.Setup(_gridSize, _limitHeight);
-		}
-
 		public void Init()
 		{
+			_gridSetup.Setup(_gridSize, _limitHeight);
 			_gridBoundary = new(0, 0, _gridSize.x, _gridSize.y);
 			_rowCleaner = new(this, _tilemap);
 		}
@@ -45,37 +41,6 @@ namespace TetrominoGridHandlers
 		public void ClearTetrominoTiles(Tetromino tetromino)
 			=> PlaceTetrominoTiles(tetromino, null);
 
-		public bool IsValidTetrominoPosition(Tetromino tetromino, Vector2Int position)
-		{
-			Vector2Int[] cells = tetromino.Data.Cells;
-
-			for (int i = 0; i < cells.Length; i++)
-			{
-				var tilePosition = cells[i] + position;
-
-				if (!IsValid(tilePosition))
-					return false;
-
-				if (_tilemap.HasTile((Vector3Int)tilePosition))
-					return false;
-			}
-
-			return true;
-		}
-
-		public bool IsInsideLimitGrid(Tetromino tetromino, Vector2Int position)
-		{
-			Vector2Int[] cells = tetromino.Data.Cells;
-
-			for (int i = 0; i < cells.Length; i++)
-			{
-				if (!IsInsideLimitGrid(cells[i] + position))
-					return false;
-			}
-
-			return true;
-		}
-
 		public bool HasTilesInLimitArea()
 		{
 			for (int y = _limitHeight; y < _gridBoundary.yMax; y++)
@@ -88,6 +53,25 @@ namespace TetrominoGridHandlers
 			}
 
 			return false;
+		}
+
+		public bool IsValidTetrominoPosition(Tetromino tetromino, Vector2Int position)
+			=> IsInside(tetromino, position, pos => !IsValid(pos) || _tilemap.HasTile((Vector3Int)pos));
+
+		public bool IsInsideLimitGrid(Tetromino tetromino, Vector2Int position)
+			=> IsInside(tetromino, position, pos => !IsInsideLimitGrid(pos));
+
+		private bool IsInside(Tetromino tetromino, Vector2Int position, Predicate<Vector2Int> predicate)
+		{
+			Vector2Int[] cells = tetromino.Data.Cells;
+
+			for (int i = 0; i < cells.Length; i++)
+			{
+				if (predicate(cells[i] + position))
+					return false;
+			}
+
+			return true;
 		}
 
 		private bool IsInsideLimitGrid(Vector2Int position)
