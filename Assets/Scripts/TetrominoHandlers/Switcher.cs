@@ -1,11 +1,9 @@
-﻿using Extensions;
-using GameStateMachine;
+﻿using GameStateMachine;
 using GameStateMachine.States;
 using Presenters;
 using System;
 using Tetrominoes;
 using TetrominoGridHandlers;
-using UnityEngine;
 
 namespace TetrominoHandlers
 {

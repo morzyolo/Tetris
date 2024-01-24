@@ -11,7 +11,6 @@ namespace Views
 
 		public int Seed => _inputField.Seed;
 
-
 		[SerializeField] private Button _playButton;
 		[SerializeField] private SeedInputField _inputField;
 
