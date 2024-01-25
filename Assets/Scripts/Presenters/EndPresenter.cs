@@ -2,6 +2,7 @@
 using GameStateMachine.States;
 using Models;
 using System;
+using TetrominoGridHandlers;
 using UnityEngine.SceneManagement;
 using Views;
 
@@ -11,12 +12,18 @@ namespace Presenters
 	{
 		private readonly EndView _view;
 		private readonly Score _score;
+		private readonly TetrominoGrid _grid;
 		private readonly State _state;
 
-		public EndPresenter(EndView view, Score score, StateMachine stateMachine)
+		public EndPresenter(
+			EndView view,
+			Score score,
+			TetrominoGrid grid,
+			StateMachine stateMachine)
 		{
 			_view = view;
 			_score = score;
+			_grid = grid;
 			_state = stateMachine.ResolveState<EndGameState>();
 
 			_view.Hide();
@@ -45,8 +52,8 @@ namespace Presenters
 
 		private void RestartGame()
 		{
-			int sceneId = SceneManager.GetActiveScene().buildIndex;
-			SceneManager.LoadScene(sceneId);
+			_grid.ClearRows();
+			_state.GoToNext();
 		}
 	}
 }
