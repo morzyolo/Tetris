@@ -19,7 +19,7 @@ namespace TetrominoGridHandlers
 			_tilemap = tilemap;
 		}
 
-		public void ClearRows(Tetromino tetromino)
+		public void ClearFilledRows(Tetromino tetromino)
 		{
 			(int minRow, int maxRow) = GetTetrominoRowBoundary(tetromino);
 
@@ -35,10 +35,19 @@ namespace TetrominoGridHandlers
 			{
 				ShiftRows(maxRow + 1, gridBoundary.yMax - 1, rowShift, gridBoundary);
 
-				for (int y = gridBoundary.yMax - rowShift; y < gridBoundary.yMax; y++)
-					for (int x = gridBoundary.xMin; x < gridBoundary.xMax; x++)
-						_tilemap.SetTile(new(x, y), null);
+				gridBoundary.yMin = gridBoundary.yMax - rowShift;
+				ClearRows(gridBoundary);
 			}
+		}
+
+		public void ClearRows()
+			=> ClearRows(_grid.GridBoundary);
+
+		private void ClearRows(RectInt boundary)
+		{
+			for (int y = boundary.yMin; y < boundary.yMax; y++)
+				for (int x = boundary.xMin; x < boundary.xMax; x++)
+					_tilemap.SetTile(new(x, y), null);
 		}
 
 		private (int min, int max) GetTetrominoRowBoundary(Tetromino tetromino)

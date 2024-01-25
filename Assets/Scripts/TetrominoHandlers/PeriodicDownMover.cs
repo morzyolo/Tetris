@@ -62,7 +62,7 @@ namespace TetrominoHandlers
 
 		public void Lock()
 		{
-			_grid.ClearRows(_container.CurrentTetromino);
+			_grid.ClearFilledRows(_container.CurrentTetromino);
 			_container.Land();
 		}
 

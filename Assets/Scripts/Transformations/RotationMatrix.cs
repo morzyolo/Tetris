@@ -14,8 +14,8 @@ namespace Transformations
 		{
 			_matrix = new float[,]
 			{
-				{ _cosHalfPi,  _sinHalfPi },
-				{ -_sinHalfPi,  _cosHalfPi }
+				{ _cosHalfPi, _sinHalfPi },
+				{ -_sinHalfPi, _cosHalfPi }
 			};
 		}
 	}

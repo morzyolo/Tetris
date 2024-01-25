@@ -37,7 +37,7 @@ namespace TetrominoGridHandlers
 		private void ResizeLimitLine(Vector2Int gridSize, int limitHeight)
 		{
 			float areaYSize = Mathf.Clamp(gridSize.y - limitHeight, 0, float.MaxValue);
-			_limitArea.size = new (gridSize.x, areaYSize);
+			_limitArea.size = new(gridSize.x, areaYSize);
 
 			Vector3 limitAreaPosition = new(
 				(float)gridSize.x / 2,

@@ -1,6 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-
-namespace TetrominoHandlers
+﻿namespace TetrominoHandlers
 {
 	public class HardDropper
 	{
@@ -11,10 +9,10 @@ namespace TetrominoHandlers
 			_downMover = downMover;
 		}
 
-		public async UniTaskVoid Drop()
+		public void Drop()
 		{
 			while (_downMover.TryMoveDown())
-				await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+			{ }
 
 			_downMover.Lock();
 		}

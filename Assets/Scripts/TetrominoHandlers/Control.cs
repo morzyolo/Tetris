@@ -49,7 +49,7 @@ namespace TetrominoHandlers
 			=> _rotator.Rotate(context.ReadValue<float>());
 
 		public void HardDrop(InputAction.CallbackContext _)
-			=> _dropper.Drop().Forget();
+			=> _dropper.Drop();
 
 		public void MoveDown(InputAction.CallbackContext context)
 		{
