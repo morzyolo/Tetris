@@ -17,20 +17,19 @@ namespace InputHandlers
 			_control = control;
 			_state = stateMachine.ResolveState<InGameState>();
 
+			Sub();
 			_state.OnEntered += Enable;
 			_state.OnExited += Disable;
 		}
 
 		public void Enable()
 		{
-			Sub();
-			_input.Enable();
+			_input.TetrominoControl.Enable();
 		}
 
 		public void Disable()
 		{
-			Unsub();
-			_input.Disable();
+			_input.TetrominoControl.Disable();
 		}
 
 		public void Dispose()
@@ -38,6 +37,7 @@ namespace InputHandlers
 			_state.OnEntered -= Enable;
 			_state.OnExited -= Disable;
 
+			Unsub();
 			Disable();
 			_input.Dispose();
 		}
