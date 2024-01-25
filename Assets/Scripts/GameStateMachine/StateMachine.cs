@@ -40,9 +40,9 @@ namespace GameStateMachine
 			throw new KeyNotFoundException("State not found");
 		}
 
-		public async UniTaskVoid ChangeState(State currentState, State nextState)
+		public void ChangeState(State currentState, State nextState)
 		{
-			await currentState.Exit();
+			currentState.Exit();
 			_currentState = nextState;
 			_currentState.Enter();
 		}
