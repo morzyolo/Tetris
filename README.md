@@ -1,3 +1,9 @@
+<div style="text-align: center;">
+  <a href="https://morzyolo.github.io/Tetris/">
+    <button style="background-color: #555555; color: white; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; font-family: 'DejaVu Sans', 'Verdana', 'Arial', sans-serif; font-size: 25px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Play web app</button>
+  </a>
+</div>
+
 # About project
 
 [![Unity version](https://img.shields.io/badge/Unity%20version-2022.3.16f-57b9d3.svg?style=for-the-badge&logo=unity)](https://unity.com/releases/editor/whats-new/2022.3.16)
@@ -28,6 +34,10 @@ You get extra points depending on the number of cells in the piece. This means t
 To start playing Tetris, click on this link: [page](https://morzyolo.github.io/Tetris/)
 
 Have fun and enjoy the game!
+
+## Possible issues
+
+If you can’t open the latest version of the game, you may need to clear the cookies for the game site(morzyolo.github.io) in your browser.
 
 # License
 
