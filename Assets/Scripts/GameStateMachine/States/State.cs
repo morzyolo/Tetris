@@ -21,7 +21,7 @@ namespace GameStateMachine.States
 
 		public void Exit()
 		{
-			OnExited.Invoke();
+			OnExited?.Invoke();
 		}
 
 		public abstract void SetNextState();

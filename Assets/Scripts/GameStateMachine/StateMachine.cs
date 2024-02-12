@@ -1,7 +1,6 @@
-using Cysharp.Threading.Tasks;
-using GameStateMachine.States;
 using System;
 using System.Collections.Generic;
+using GameStateMachine.States;
 
 namespace GameStateMachine
 {
@@ -42,6 +41,9 @@ namespace GameStateMachine
 
 		public void ChangeState(State currentState, State nextState)
 		{
+			if (!ReferenceEquals(_currentState, currentState))
+				return;
+
 			currentState.Exit();
 			_currentState = nextState;
 			_currentState.Enter();
